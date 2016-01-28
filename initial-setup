@@ -1,0 +1,241 @@
+#!/bin/bash
+# Copyright 2016 Ryan Sawhill Aroha <rsaw@redhat.com>
+# License: Apache License 2.0 (see LICENSE or http://apache.org/licenses/LICENSE-2.0.html)
+# Helper script for upvm
+
+if [[ $(id -u) != 0 ]]; then
+    echo This script must be run as root
+    echo Aborting
+    exit 1
+fi
+
+if getenforce | egrep -sq '^(Permissive|Enforcing)$' && ! command -v semanage >/dev/null; then
+    echo This script requires the semanage command
+    echo Install policycoreutils-python package
+    echo Aborting
+    exit 1
+fi
+
+prg=upvm
+cacheDir="/var/cache/$prg"
+imageDir="/var/lib/$prg"
+domain=example.com
+
+if getent group libvirt >/dev/null; then
+    libvirtGID=$(getent group libvirt | cut -d: -f3)
+else
+    echo The libvirt system group is missing
+    echo This means you have not yet installed the libvirt-daemon
+    echo Try again once you have done that
+    echo Aborting
+    exit 1
+fi
+
+if getent passwd qemu >/dev/null; then
+    # This should always be 107 but let's not take any chances
+    qemuUID=$(getent passwd qemu | cut -d: -f3)
+else
+    echo The qemu system user is missing
+    echo This means you have not yet installed qemu-common or libvirt-daemon-driver-qemu
+    echo Try again once you have done that
+    echo Aborting
+    exit 1
+fi
+
+promptok() {
+    read -ep "Continue? [y/n] "
+    [[ $REPLY == y ]] || exit 1
+}
+
+cat <<EOF
+This script is meant to be run once to make system-wide changes to ease use of
+$prg and virsh/virt-install. That said, it can be safely run more than once.
+
+A user must be in the libvirt group to use $prg with the default system-wide
+cache/image locations, not to mention run virsh and virt-install commands.
+
+Here's the only piece of this that requires your input:
+You must specify a space-separated list of users to add to the libvirt group.
+EOF
+USERS=
+read -ep '> ' USERS
+
+if ! grep -qs '\S' <<<"$USERS"; then
+    echo No user specified
+    promptok
+fi
+
+for user in $USERS; do
+    if getent passwd "$user" >/dev/null; then
+        if usermod -aG libvirt "$user"; then
+            echo -e "\nSuccessfully added '$user' to the libvirt group"
+        else
+            echo -e "\nError adding '$user' to the libvirt group"
+            promptok
+        fi
+    else
+        echo -e "\nInvalid user: '$user'"
+        promptok
+    fi
+done
+
+if grep -qs '\S' <<<"$USERS"; then
+    echo -e "\nWARNING: If any specified users are currently logged in they will need to"
+    echo "         log out or open a new session in order to use $prg."
+    read -ep "[Press Enter to acknowledge]"
+fi
+
+
+echo -e "\nCreating system-wide cache dir: $cacheDir"
+mkdir -p "$cacheDir"
+chgrp libvirt "$cacheDir"
+chmod 2775 "$cacheDir"
+
+xml=$(mktemp)
+cat >$xml <<EOF
+<pool type='dir'>
+  <name>$prg</name>
+  <target>
+    <path>$imageDir</path>
+    <permissions>
+      <mode>0770</mode>
+      <owner>$qemuUID</owner>
+      <group>$libvirtGID</group>
+      <label>system_u:object_r:virt_image_t:s0</label>
+    </permissions>
+  </target>
+</pool>
+EOF
+
+echo -e "\nAdding $imageDir as storage pool writable by members of libvirt group ...\n"
+{
+virsh pool-define $xml
+rm $xml
+virsh pool-build $prg
+virsh pool-start $prg
+virsh pool-autostart $prg
+} 2>/dev/null
+
+echo "Permanently fixing SELinux context ..."
+semanage fcontext -a -t virt_image_t "$imageDir(/.*)?"
+restorecon -RF "$imageDir"
+
+echo -e "\nAWESOME. All the critical stuff is done. You can go enjoy $prg."
+echo "That said, there are 4 more optional things you can do."
+
+cat <<EOF
+
+1) Make sure that the users who use $prg have generated ssh keys
+
+$prg automatically configures the root user (in the VMs it builds) to trust all
+ssh keys found in ~/.ssh/id* along with ~/.ssh/authorized_keys.
+EOF
+read -ep "[Press Enter to acknowledge]"
+
+
+cat <<EOF
+
+2) Add $domain domain to the libvirt default network
+
+This makes it so that DNS queries to *.$domain made from inside the default
+private network (i.e., inside the virtual machines) will be answered by
+libvirt's dnsmasq DNS server. This is a good thing.
+EOF
+promptok
+
+if virsh net-info default &>/dev/null; then
+    virsh net-dumpxml default >$xml
+else
+    cat >$xml <<-EOF
+	<network>
+	  <name>default</name>
+	  <bridge name="virbr0"/>
+	  <forward/>
+	  <ip address="192.168.122.1" netmask="255.255.255.0">
+	    <dhcp>
+	      <range start="192.168.122.2" end="192.168.122.254"/>
+	    </dhcp>
+	  </ip>
+	  <domain name='$domain' localOnly='yes'/>
+	</network>
+	EOF
+fi
+
+
+if grep -q 'domain name=' $xml; then
+    currentDomainName=$(egrep -o 'domain name=\S+' $xml | cut -d\" -f2 | cut -d\' -f2)
+    echo -e "\ndefault network already has 'domain name=$currentDomainName' set; skipping"
+else
+    sed -i "s,ip>,&\n  <domain name='$domain' localOnly='yes'/>," $xml
+    virsh net-destroy default
+    virsh net-undefine default
+    virsh net-define $xml
+    virsh net-start default
+    virsh net-autostart default
+fi
+
+libvirtIPADDR=$(egrep -o 'ip address=\S+' $xml | cut -d\" -f2 | cut -d\' -f2)
+
+cat <<EOF
+
+3) Make the host system able to also query libvirt's dnsmasq DNS server
+ 
+Do you want the option to ssh to your new $domain VMs by name without
+looking up their IPs? Of course you do. Who wouldn't. To do this, we tell
+NetworkManager to kick off its own instance of dnsmasq for DNS caching but we
+also have it point to libvirt's dnsmasq @ $libvirtIPADDR for *.$domain
+queries.
+
+(Warning: this requires RHEL 7.2+)
+EOF
+promptok
+
+if [[ -n $currentDomainName && $currentDomainName != example.com ]]; then
+    echo -e "\nNOTE: You already had 'domain name=$currentDomainName' set for your libvirt network"
+    echo "      Using that instead of $domain"
+    domain=$currentDomainName
+fi
+
+mkdir -p /etc/NetworkManager/dnsmasq.d
+if [[ -f /etc/NetworkManager/dnsmasq.d/libvirt_dnsmasq.conf ]]; then
+    echo -e "\n/etc/NetworkManager/dnsmasq.d/libvirt_dnsmasq.conf already exists; skipping"
+else
+    echo -e "\nWriting 'server=/$domain/$libvirtIPADDR' to /etc/NetworkManager/dnsmasq.d/libvirt_dnsmasq.conf"
+    echo "server=/$domain/$libvirtIPADDR" >/etc/NetworkManager/dnsmasq.d/libvirt_dnsmasq.conf
+fi
+if [[ -f /etc/NetworkManager/conf.d/99-enable-dnsmasq.conf ]]; then
+    echo -e "\n/etc/NetworkManager/conf.d/99-enable-dnsmasq.conf already exists; skipping"
+else
+    echo
+    echo "Writing '[main]\ndns=dnsmasq' to /etc/NetworkManager/conf.d/99-enable-dnsmasq.conf"
+    echo -e "[main]\ndns=dnsmasq" >/etc/NetworkManager/conf.d/99-enable-dnsmasq.conf
+fi
+echo -e "\nRestarting NetworkManager"
+systemctl restart NetworkManager
+
+
+cat <<EOF
+
+4) Make it easier to ssh to VMs -- no need to type "root@" or ".$domain"
+
+This requires adding 5 lines to /etc/ssh/ssh_config and takes effect
+immediately. This is the final optional piece of this script. 
+EOF
+promptok
+
+if grep -q "CanonicalDomains $domain" /etc/ssh/ssh_config; then
+    echo -e "\nThe 'CanonicalDomains $domain' setting is already present in ssh_config; skipping"
+else
+    echo -e "\nAppending to /etc/ssh/ssh_config ..."
+    cat >>/etc/ssh/ssh_config <<-EOF
+	
+	# Added by $prg:
+	Host *
+	    CanonicalDomains $domain
+	    CanonicalizeHostname yes
+	Host *.$domain
+	    User root
+	EOF
+fi
+
+echo -e "\nALL DONE! Have fun with $prg!"
