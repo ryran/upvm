@@ -34,7 +34,12 @@ usage: upvm [--debug] [--nocolor] [--quiet] [--noconsole]
 
 Leverage virt-builder & virt-install to spin up new VMs with ease
 
-Note: Args that start with '--' (eg. --debug) can also be set in a config file (/usr/share/upvm/example.conf or /etc/upvm.conf or ~/.config/upvm.conf or ). The recognized syntax for setting (key, value) pairs is based on the INI and YAML formats (e.g. key=value or foo=TRUE). For full documentation of the differences from the standards please refer to the ConfigArgParse documentation. If an arg is specified in more than one place, then commandline values override config file values which override defaults.
+Note: Args that start with '--' (eg. --debug) can also be set in a config file
+(/usr/share/upvm/example.conf or /etc/upvm.conf or ~/.config/upvm.conf or ). The recognized
+syntax for setting (key, value) pairs is based on the INI and YAML formats (e.g. key=value or
+foo=TRUE). For full documentation of the differences from the standards please refer to the
+ConfigArgParse documentation. If an arg is specified in more than one place, then commandline
+values override config file values which override defaults.
 
 SIMPLE OPTIONS:
   Tweak runtime behavior of upvm.
