@@ -1,10 +1,13 @@
 # upvm
 Leverage virt-builder &amp; virt-install to spin up new VMs with ease
 
+### Upcoming release
+
+Date of [first release](https://github.com/ryran/upvm/milestones/0.10.0%20albino%20salamander%20%28first%20release%29) (including rpm for RHEL7/Fedora): Sunday January 31st
+
 ### Requirements
 
-RPM for Fedora/RHEL7 will released in the next week few days.
-In the meantime, you need:
+You need:
 
 - libvirt, libguestfs-tools (`virt-builder`), virt-install
 
