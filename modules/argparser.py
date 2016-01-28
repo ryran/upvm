@@ -84,7 +84,7 @@ def parse():
         "  See <http://github.com/ryran/upvm> to report bugs or RFEs").format(version)
     if haveConfigargparse:
         p = argparse.ArgumentParser(
-            default_config_files=['/usr/lib/{}/example.conf'.format(cfg.prog), '/etc/{}.conf'.format(cfg.prog), '~/.config/{0}.conf'.format(cfg.prog)],
+            default_config_files=['/usr/share/{}/example.conf'.format(cfg.prog), '/etc/{}.conf'.format(cfg.prog), '~/.config/{0}.conf'.format(cfg.prog)],
             prog=cfg.prog,
             description=description,
             add_help=False,

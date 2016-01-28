@@ -110,7 +110,7 @@ def testconnect_hypervisor():
         print(c.RED("Error connecting to {}".format(os.environ['LIBVIRT_DEFAULT_URI'])))
         if os.environ['LIBVIRT_DEFAULT_URI'] == 'qemu:///system':
             print("You need to execute the initial setup program -- as root run:")
-            print(c.green("  /usr/lib/{}/initial-setup".format(cfg.prog)))
+            print(c.green("  /usr/share/{}/initial-setup".format(cfg.prog)))
         else:
             print("The environment variable 'LIBVIRT_DEFAULT_URI' is customized")
             print("If this is not intentional, remove the declaration from your shell config")
@@ -122,7 +122,7 @@ def check_for_missing_imgdir():
         print(c.RED("Image dir '{}' does not exist".format(cfg.opts.imgdir)))
         if cfg.opts.imgdir == '/var/lib/{}'.format(cfg.prog):
             print("You need to execute the initial setup program -- as root run:")
-            print(c.green("  /usr/lib/{}/initial-setup".format(cfg.prog)))
+            print(c.green("  /usr/share/{}/initial-setup".format(cfg.prog)))
         exit(1)
 
 
@@ -134,7 +134,7 @@ def check_user_in_libvirt_group():
             print(c.green("  usermod -aG libvirt {}".format(myUser)))
         else:
             print("You need to execute the initial setup program -- as root run:")
-            print(c.green("  /usr/lib/{}/initial-setup".format(cfg.prog)))
+            print(c.green("  /usr/share/{}/initial-setup".format(cfg.prog)))
         exit(1)
 
 
