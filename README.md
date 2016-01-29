@@ -90,7 +90,10 @@ TOTALLY OPTIONAL OS-LEVEL OPTIONS:
   Disk image modifications done by virt-builder.
 
   --root-password SELECTOR
-                        Password defaults to 'redhat'; use 'password:PASSWORD'
+                        If this option is not used (either on cmdline or via
+                        config file), upvm will prompt for the root password
+                        at runtime and optionally save it to per-user config-
+                        file for future use; syntax: use 'password:PASSWORD'
                         or 'file:FILENAME' or 'random' (see virt-builder
                         --root-password for more)
   --dnsdomain DOMAIN    Set DNS domain name to be appended to auto-generated
@@ -195,6 +198,6 @@ TOTALLY OPTIONAL HARDWARE-LEVEL (VM) OPTIONS:
                         [presumably public] bridge br0)
 
 VERSION:
-  upvm v0.0.9~beta3 last mod 2016/01/27
+  upvm v0.0.9~beta4 last mod 2016/01/28
   See <http://github.com/ryran/upvm> to report bugs or RFEs
 ```
