@@ -84,8 +84,8 @@ def main():
     # Launch virt-builder
     from modules import builder
     builder.build()
-    # Quit if using --debug --debug
-    if cfg.debugLvl > 2:
+    # Quit if requested
+    if cfg.opts.build_image_only:
         exit()
     # Launch virt-install
     from modules import installer

@@ -100,7 +100,10 @@ def parse():
         description="Tweak runtime behavior of {}.".format(cfg.prog))
     grp0.add_argument(
         '--debug', action='count', default=0,
-        help="Enable printing extra debug messages (once: all external command-calls and cache-writing/loading; twice: adds '-v' to virt-builder; 3 times: adds '-x' option to virt-builder and triggers exit before execution of virt-install")
+        help="Enable printing extra debug messages (once: all external command-calls and cache-writing/loading; twice: adds '-v' to virt-builder; 3 times: adds '-x' option to virt-builder")
+    grp0.add_argument(
+        '--build-image-only', action='store_true',
+        help="Quit after virt-builder finishes making the image file")
     grp0.add_argument(
         '--nocolor', dest='enableColor', action='store_false',
         help="Disable all color terminal enhancements")
