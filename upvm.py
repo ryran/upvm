@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
 #-------------------------------------------------------------------------------
-# Copyright 2015, 2016 upvm Contributors (see CONTRIBUTORS file in source)
+# Copyright 2015, 2016 upvm Contributors (see CONTRIBUTORS.md file in source)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.

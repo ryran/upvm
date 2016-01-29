@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2016 upvm Contributors (see CONTRIBUTORS file in source)
+# Copyright 2016 upvm Contributors (see CONTRIBUTORS.md file in source)
 # License: Apache License 2.0 (see LICENSE file in source)
 
 # Modules from standard library
