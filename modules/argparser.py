@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# Copyright 2016 Ryan Sawhill Aroha <rsaw@redhat.com>
-# License: Apache License 2.0 (see LICENSE or http://apache.org/licenses/LICENSE-2.0.html)
+# Copyright 2016 upvm Contributors (see CONTRIBUTORS file in source)
+# License: Apache License 2.0 (see LICENSE file in source)
 
 # Modules from standard library
 from __future__ import print_function
@@ -29,7 +29,6 @@ import json
 from . import string_ops as c
 from . import cfg
 
-
 def byteify(input):
     if isinstance(input, dict):
         return {byteify(key):byteify(value) for key,value in input.iteritems()}
@@ -40,12 +39,10 @@ def byteify(input):
     else:
         return input
 
-
 def read_cache_file(infile):
     with open('{}/{}'.format(cfg.tabCacheDir, infile), 'r') as f:
         out = json.load(f)
     return byteify(out)
-
 
 class CustomFormatter(argparse.RawDescriptionHelpFormatter):
     def _format_action_invocation(self, action):
@@ -71,7 +68,6 @@ class CustomFormatter(argparse.RawDescriptionHelpFormatter):
                 parts[-1] += ' %s'%args_string
             return ', '.join(parts)
 
-
 def parse():
     fmt = lambda prog: CustomFormatter(cfg.prog)
     description = "Leverage virt-builder & virt-install to spin up new VMs with ease"
@@ -84,7 +80,7 @@ def parse():
         "  See <http://github.com/ryran/upvm> to report bugs or RFEs").format(version)
     if haveConfigargparse:
         p = argparse.ArgumentParser(
-            default_config_files=['/usr/share/{}/example.conf'.format(cfg.prog), '/etc/{}.conf'.format(cfg.prog), '~/.config/{0}.conf'.format(cfg.prog)],
+            default_config_files=[cfg.cfgfileDefault, cfg.cfgfileSystem, cfg.cfgfileUser],
             prog=cfg.prog,
             description=description,
             add_help=False,
@@ -154,8 +150,8 @@ def parse():
         'TOTALLY OPTIONAL OS-LEVEL OPTIONS',
         description="Disk image modifications done by virt-builder.")
     grpAA.add_argument(
-        '--root-password', metavar='SELECTOR', default='password:redhat',
-        help="Password defaults to 'redhat'; use 'password:PASSWORD' or 'file:FILENAME' or 'random' (see virt-builder --root-password for more)")
+        '--root-password', metavar='SELECTOR',
+        help="If this option is not used (either on cmdline or via config file), {} will prompt for the root password at runtime and optionally save it to per-user config-file for future use; syntax: use 'password:PASSWORD' or 'file:FILENAME' or 'random' (see virt-builder --root-password for more)".format(cfg.prog))
     grpAA.add_argument(
         '--dnsdomain', metavar='DOMAIN', default='example.com',
         help="Set DNS domain name to be appended to auto-generated HOSTNAME (default: 'example.com'; keep in mind however that this option has no effect if --hostname is specified)")

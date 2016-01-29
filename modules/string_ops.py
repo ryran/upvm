@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-# Copyright 2015 Ravshello Authors
-# License: Apache License 2.0 (see LICENSE or http://apache.org/licenses/LICENSE-2.0.html)
+# Copyright 2015 Ravshello Authors (rsaw@redhat.com; https://github.com/ryran/ravshello)
+# Copyright 2016 upvm Contributors (see CONTRIBUTORS file in source)
+# License: Apache License 2.0 (see LICENSE file in source)
 
 # Modules from standard library
 from __future__ import print_function

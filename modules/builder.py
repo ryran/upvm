@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# Copyright 2016 Ryan Sawhill Aroha <rsaw@redhat.com>
-# License: Apache License 2.0 (see LICENSE or http://apache.org/licenses/LICENSE-2.0.html)
+# Copyright 2016 upvm Contributors (see CONTRIBUTORS file in source)
+# License: Apache License 2.0 (see LICENSE file in source)
 
 # Modules from standard library
 from __future__ import print_function
@@ -17,7 +17,6 @@ from sys import exit
 from . import cfg
 from . import string_ops as c
 
-
 firstBootScriptStart = dedent("""\
     #!/bin/bash
     echo "Installing authorized ssh pubkey(s) for root user ..."
@@ -29,7 +28,6 @@ firstBootScriptStart = dedent("""\
     cat >> ~/.ssh/authorized_keys <<\EOF
     """)
 
-
 firstBootScriptEnd = dedent("""\
     EOF
     echo Done.
@@ -40,7 +38,6 @@ firstBootScriptEnd = dedent("""\
     rm /etc/rc?.d/S99virt-sysprep-firstboot
     echo One-time firstboot script finished.
     """)
-
 
 def initialize_libvirt_qemu_session():
     cmd = ['virsh', '-c', 'qemu:///session', 'uri']
@@ -60,7 +57,6 @@ def initialize_libvirt_qemu_session():
         else:
             break
         loopCount += 1
-
 
 def build():
     c.verbose("  INFO: Initializing libvirt connection to qemu:///session")
