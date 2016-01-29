@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# Copyright 2016 Ryan Sawhill Aroha <rsaw@redhat.com>
-# License: Apache License 2.0 (see LICENSE or http://apache.org/licenses/LICENSE-2.0.html)
+# Copyright 2016 upvm Contributors (see CONTRIBUTORS.md file in source)
+# License: Apache License 2.0 (see LICENSE file in source)
 
 # Modules from standard library
 from __future__ import print_function
@@ -15,10 +15,8 @@ import json
 from . import cfg
 from . import string_ops as c
 
-
 # Set username
 myUser = pwd.getpwuid(os.getuid()).pw_name
-
 
 def ret(returnCode):
     """Return True if *returnCode* is 0."""
@@ -26,7 +24,6 @@ def ret(returnCode):
         return True
     else:
         return False
-
 
 def call(cmd, showStdout=False, showStderr=False, shell=False):
     """Execute *cmd* and return True on success."""
@@ -41,7 +38,6 @@ def call(cmd, showStdout=False, showStderr=False, shell=False):
     null.close()
     return ret(rc)
 
-
 def print_template_metadata(template):
     print("{0:17}: {1}".format("template", template['os-version']))
     for key in template:
@@ -53,12 +49,10 @@ def print_template_metadata(template):
         else:
             print("notes:\n{}".format(template['notes']))
 
-
 def check_virtbuilder_version():
     if not call(['virt-builder', '--version']):
         print(c.RED("Error executing virt-builder; try installing libguestfs-tools rpm\n"))
         exit(1)
-
 
 def if_no_template_requested_then_print_vblist_and_quit():
     if cfg.opts.list:
@@ -70,12 +64,10 @@ def if_no_template_requested_then_print_vblist_and_quit():
         print(c.YELLOW("No template specified"))
         cfg.prompt_for_template_and_exit()
 
-
 def check_if_requested_template_exists():
     if not cfg.opts.templateName in cfg.templateChoices:
         print(c.YELLOW("Invalid template specified"))
         cfg.prompt_for_template_and_exit()
-
 
 def isolate_metadata_for_chosen_vb_template():
     """Save json for chosen virt-builder template."""
@@ -83,24 +75,20 @@ def isolate_metadata_for_chosen_vb_template():
         if template['os-version'] == cfg.opts.templateName:
             cfg.templateInfo = template
 
-
 def if_metadata_requested_then_print_and_quit():
     if cfg.opts.showMetadataOnly:
         print_template_metadata(cfg.templateInfo)
         exit()
-
 
 def check_virsh_version():
     if not call(['virsh', '--version']):
         print(c.RED("Error executing virsh; try installing libvirt-client rpm\n"))
         exit(1)
 
-
 def check_virtinstall_version():
     if not call(['virt-install', '--version']):
         print(c.RED("Error executing virt-install; try installing virt-install rpm\n"))
         exit(1)
-
 
 def testconnect_hypervisor():
     """Exit if unable to connect via virsh to default URI."""
@@ -116,7 +104,6 @@ def testconnect_hypervisor():
             print("If this is not intentional, remove the declaration from your shell config")
         exit(1)
 
-
 def check_for_missing_imgdir():
     if not os.path.isdir(cfg.opts.imgdir):
         print(c.RED("Image dir '{}' does not exist".format(cfg.opts.imgdir)))
@@ -124,7 +111,6 @@ def check_for_missing_imgdir():
             print("You need to execute the initial setup program -- as root run:")
             print(c.green("  /usr/share/{}/initial-setup".format(cfg.prog)))
         exit(1)
-
 
 def check_user_in_libvirt_group():
     if os.getuid() and myUser not in grp.getgrnam('libvirt').gr_mem:
@@ -136,7 +122,6 @@ def check_user_in_libvirt_group():
             print("You need to execute the initial setup program -- as root run:")
             print(c.green("  /usr/share/{}/initial-setup".format(cfg.prog)))
         exit(1)
-
 
 def check_for_writable_imgdir():
     cfg.debug("Testing write perms by creating tempfile in {}".format(cfg.opts.imgdir))
@@ -156,7 +141,6 @@ def check_for_writable_imgdir():
             print("Either fix directory permissions as root or specify alternate dir with '--imgdir' option")
         exit(1)
 
-
 def try_capture_existing_vm_names():
     """Capture list of existing VM names and exit on failure."""
     cmd = ['virsh', 'list', '--all', '--name']
@@ -166,7 +150,6 @@ def try_capture_existing_vm_names():
     except:
         print(c.RED("\nUnknown error executing '{}'".format(" ".join(cmd))))
         exit(1)
-
 
 def check_system_config():
     check_virtbuilder_version()

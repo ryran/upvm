@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# Copyright 2016 Ryan Sawhill Aroha <rsaw@redhat.com>
-# License: Apache License 2.0 (see LICENSE or http://apache.org/licenses/LICENSE-2.0.html)
+# Copyright 2016 upvm Contributors (see CONTRIBUTORS.md file in source)
+# License: Apache License 2.0 (see LICENSE file in source)
 
 # Modules from standard library
 from __future__ import print_function
