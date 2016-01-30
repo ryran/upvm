@@ -21,8 +21,8 @@ These two are not required, but are highly recommended:
 
 ```
 $ upvm --help
-usage: upvm [--debug] [--nocolor] [--quiet] [--noconsole]
-            [--cachedir VBCACHEDIR] [-h] [--help] [-l]
+usage: upvm [--loglevel {debug,info,error}] [--build-image-only] [--nocolor]
+            [--noconsole] [--cachedir VBCACHEDIR] [-h] [--help] [-l]
             [--arch {x86_64,i386,i686,ia64,armv71,ppc,ppc64,ppc64le,aarch64,sparc64,s390,s390x}]
             [--info] [-n VMNAME] [--os-variant OS] [--root-password SELECTOR]
             [--dnsdomain DOMAIN] [--hostname HOSTNAME | --hostname-prompt]
@@ -47,13 +47,13 @@ values override config file values which override defaults.
 SIMPLE OPTIONS:
   Tweak runtime behavior of upvm.
 
-  --debug               Enable printing extra debug messages (once: all
-                        external command-calls and cache-writing/loading;
-                        twice: adds '-v' to virt-builder; 3 times: adds '-x'
-                        option to virt-builder and triggers exit before
-                        execution of virt-install
+  --loglevel {debug,info,error}
+                        Control verbosity during operation; with 'debug', all
+                        external command-calls are logged, including full
+                        virt-builder & virt-install cmdlines; with 'info',
+                        tidbits of status messages are printing along the way
+  --build-image-only    Quit after virt-builder finishes making the image file
   --nocolor             Disable all color terminal enhancements
-  --quiet               Hide most non-critical INFO/WARN messages
   --noconsole           Disable post-install auto-execution of 'sudo virsh
                         console VMNAME' (automatically disabled when running
                         with no tty)
@@ -198,6 +198,6 @@ TOTALLY OPTIONAL HARDWARE-LEVEL (VM) OPTIONS:
                         [presumably public] bridge br0)
 
 VERSION:
-  upvm v0.0.9~beta4 last mod 2016/01/28
+  upvm v0.10.0~rc last mod 2016/01/30
   See <http://github.com/ryran/upvm> to report bugs or RFEs
 ```
