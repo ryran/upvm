@@ -99,17 +99,14 @@ def parse():
         'SIMPLE OPTIONS',
         description="Tweak runtime behavior of {}.".format(cfg.prog))
     grp0.add_argument(
-        '--debug', action='count', default=0,
-        help="Enable printing extra debug messages (once: all external command-calls and cache-writing/loading; twice: adds '-v' to virt-builder; 3 times: adds '-x' option to virt-builder")
+        '--loglevel', choices=['debug', 'info', 'error'], default='info',
+        help="Control verbosity during operation; with 'debug', all external command-calls are logged, including full virt-builder & virt-install cmdlines; with 'info', tidbits of status messages are printing along the way")
     grp0.add_argument(
         '--build-image-only', action='store_true',
         help="Quit after virt-builder finishes making the image file")
     grp0.add_argument(
         '--nocolor', dest='enableColor', action='store_false',
         help="Disable all color terminal enhancements")
-    grp0.add_argument(
-        '--quiet', dest='enableVerboseMessages', action='store_false',
-        help="Hide most non-critical INFO/WARN messages")
     grp0.add_argument(
         '--noconsole', dest='autoconsole', action='store_false',
         help="Disable post-install auto-execution of 'sudo virsh console VMNAME' (automatically disabled when running with no tty)")
@@ -241,9 +238,14 @@ def parse():
     if o.showHelp:
         p.print_help()
         exit()
-    # Respect cmdline requests about color and verbosity
+    # Respect cmdline requests about color
     c.enableColor = o.enableColor
-    c.enableVerbose = o.enableVerboseMessages
-    # Reset debug
-    cfg.debugLvl = o.debug
+    # And verbosity
+    import logging
+    o.loglevel = getattr(logging, o.loglevel.upper())
+    if o.loglevel > 10:
+        c.enableDebug = False
+        if o.loglevel > 20:
+            c.enableVerbose = False
+    # Save namespace to global cfg module
     cfg.opts = o

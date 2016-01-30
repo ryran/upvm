@@ -14,7 +14,7 @@ from . import string_ops as c
 
 # Version info
 __version__ = '0.10.0~rc'
-__date__    = '2016/01/29'
+__date__    = '2016/01/30'
 
 # All references to program name should use this
 prog = 'upvm'
@@ -23,9 +23,6 @@ prog = 'upvm'
 cfgfileDefault = '/usr/share/{}/example.conf'.format(prog)
 cfgfileSystem = '/etc/{}.conf'.format(prog)
 cfgfileUser = '~/.config/{}.conf'.format(prog)
-
-# Debug level defaults to 1 until argparse; then defaults to 0 
-debugLvl = 1
 
 # This directory will hold cache files for tab-completion
 tabCacheDir = "{}/.cache/{}".format(os.environ['HOME'], prog)
@@ -51,15 +48,11 @@ templateInfo = {}
 # This holds list of VM names to avoid collisions
 guestList = []
 
-def debug(obj):
-    if debugLvl:
-        print(c.blue("[DEBUG] {}".format(obj)))
-
 def get_virt_builder_list(returnType=None):
     cmd = ['virt-builder', '--list']
     if returnType == 'json':
         cmd.append('--list-format=json')
-    debug("Executing: {}".format(" ".join(cmd)))
+    c.debug("Executing: {}".format(" ".join(cmd)))
     try:
         out = subprocess.check_output(cmd)
     except:

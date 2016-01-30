@@ -33,6 +33,6 @@ def install():
     if o.network:
         for n in o.network:
             cmd.extend(['--network', n])
-    c.verbose("\n  INFO: Starting virt-install")
-    cfg.debug("Executing:\n  {}\n".format(" \ \n  ".join(cmd)))
+    c.verbose("Starting virt-install")
+    c.debug("Executing:\n    {}\n".format(" \ \n    ".join(cmd)))
     subprocess.check_call(cmd)

@@ -31,13 +31,13 @@ from modules import cfg, argparser
 
 def update_cache_file(outfile, input):
     outfile = "{}/{}".format(cfg.tabCacheDir, outfile)
-    cfg.debug("Updating cache file {}".format(outfile))
+    c.debug("Updating cache file {}".format(outfile))
     with open(outfile, 'w') as f:
         json.dump(input, f)
 
 def get_all_osvariants():
     cmd = ['osinfo-query', 'os', '-f', 'short-id']
-    cfg.debug("Executing: {}".format(" ".join(cmd)))
+    c.debug("Executing: {}".format(" ".join(cmd)))
     try:
         out = subprocess.check_output(cmd)
     except:
@@ -62,7 +62,7 @@ def refresh_cache():
 def build_initial_cache():
     if os.path.isdir(cfg.tabCacheDir):
         return
-    cfg.debug("Building initial cache")
+    c.debug("Building initial cache")
     refresh_cache()
 
 def main():
@@ -92,7 +92,7 @@ def main():
     installer.install()
     # Optionally launch serial connection
     if cfg.opts.autoconsole and stdout.isatty():
-        if cfg.debugLvl:
+        if cfg.opts.loglevel < 20:
             sleep(5.0)
         subprocess.call(['virsh', 'console', cfg.opts.vmname])
 

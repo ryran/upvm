@@ -9,8 +9,9 @@ from time import sleep
 from re import sub
 from sys import stdout
 
-# Configure if color should be enabled, verbose messages printed
+# Configure if color should be enabled, verbose/debug messages printed
 enableColor = True
+enableDebug = True
 enableVerbose = True
 
 def slow_print(string, interval=.02):
@@ -26,10 +27,15 @@ def replace_bad_chars_with_underscores(string,
     """Perform some simple character substitution on *string*."""
     return sub(pattern, repl, string, count)
 
+def debug(message, end='\n'):
+    """Print *message* in blue only if enableDebug is True."""
+    if enableDebug:
+        print(blue("  DEBUG: {}".format(message)), end=end)
+
 def verbose(message, end='\n'):
-    """Print *message* in magenta only if verboseMessages is True."""
+    """Print *message* in magenta only if enableVerbose is True."""
     if enableVerbose:
-        print(magenta(message), end=end)
+        print(magenta("  INFO: {}".format(message)), end=end)
 
 def REVERSE(txt):
     """Return text in reverse (& bolded)."""
