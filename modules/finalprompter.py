@@ -29,15 +29,15 @@ def check_prompt_root_pw():
                     break
             cfg.opts.root_password = ''
             if passwd == 'random':
-                c.verbose("  INFO: Password for root will be randomly generated")
+                c.verbose("Password for root will be randomly generated")
             elif passwd == 'disabled':
-                c.verbose("  INFO: Password auth for root will be disabled")
+                c.verbose("Password auth for root will be disabled")
             elif os.path.isfile(os.path.expanduser(passwd)):
                 passwd = os.path.expanduser(passwd)
-                c.verbose("  INFO: Password for root will be set by reading first line of file '{}'".format(passwd))
+                c.verbose("Password for root will be set by reading first line of file '{}'".format(passwd))
                 cfg.opts.root_password = 'file:'
             else:
-                c.verbose("  INFO: Password for root will be set to string '{}'".format(passwd))
+                c.verbose("Password for root will be set to string '{}'".format(passwd))
                 cfg.opts.root_password = 'password:'
             cfg.opts.root_password += passwd
             save_passwd = raw_input(c.CYAN("Save password choice as default to '{}'? ".format(cfg.cfgfileUser)) + c.BOLD("[y]/n") + c.CYAN(" : "))
@@ -45,7 +45,7 @@ def check_prompt_root_pw():
                 subprocess.call(['mkdir', '-p', os.path.dirname(cfg.cfgfileUser)])
                 with open(os.path.expanduser(cfg.cfgfileUser), 'a') as f:
                     f.write('# Added by {}:\nroot-password = {}\n'.format(cfg.prog, cfg.opts.root_password))
-                c.verbose("  INFO: Wrote 'root-password = {}' to {}".format(cfg.opts.root_password, cfg.cfgfileUser))
+                c.verbose("Wrote 'root-password = {}' to {}".format(cfg.opts.root_password, cfg.cfgfileUser))
         else:
             print(c.RED("No root password specified; aborting"))
             print("Either run with stdin/stdout connected to tty to interactively enter password or\n"
@@ -92,15 +92,15 @@ def check_prompt_hostname():
             if not cfg.opts.hostname:
                 cfg.opts.hostname = _default_name
         else:
-            c.verbose("  INFO: HOSTNAME not specified; using '{}'".format(_default_name))
+            c.verbose("HOSTNAME not specified; using '{}'".format(_default_name))
             cfg.opts.hostname = _default_name
 
 def checkset_img_format():
     if cfg.opts.format in 'auto':
         cfg.opts.format = cfg.templateInfo.get('format')
         if not cfg.opts.format or cfg.opts.format == 'qcow2' or cfg.opts.format == 'raw':
-            c.verbose("  INFO: Unable to determine native format of chosen template")
-            c.verbose("  INFO: Using qcow2 for output format (change with --format=raw)")
+            c.verbose("Unable to determine native format of chosen template")
+            c.verbose("Using qcow2 for output format (change with --format=raw)")
             cfg.opts.format = 'qcow2'
 
 def check_prompt_img_outfilepath():
@@ -121,13 +121,13 @@ def checkset_validate_osvariant():
         _adjective = "Auto-detected"
         cfg.opts.os_variant = cfg.templateInfo.get('osinfo')
         if not cfg.opts.os_variant:
-            c.verbose("  INFO: Chosen template doesn't include 'osinfo=' metadata")
-            c.verbose("  INFO: Guest OS will not use any special hypervisor features like virt-io")
+            c.verbose("Chosen template doesn't include 'osinfo=' metadata")
+            c.verbose("Guest OS will not use any special hypervisor features like virt-io")
     # Validate os-variant choice (if one made)
     if cfg.opts.os_variant:
         o = cfg.opts.os_variant
         if is_valid_os_variant(o):
-            c.verbose("  INFO: {} os-variant ('{}') was validated by osinfo-query command".format(_adjective, o))
+            c.verbose("{} os-variant ('{}') was validated by osinfo-query command".format(_adjective, o))
         else:
             if 'fedora' in o:
                 o = 'fedora22'
@@ -138,11 +138,11 @@ def checkset_validate_osvariant():
             elif 'rhel5.' in o:
                 o = 'rhel5.11'
             if is_valid_os_variant(o):
-                c.verbose("  INFO: {} os-variant ('{}') was reset to latest ('{}') validated by osinfo-query".format(_adjective, cfg.opts.os_variant, o))
+                c.verbose("{} os-variant ('{}') was reset to latest ('{}') validated by osinfo-query".format(_adjective, cfg.opts.os_variant, o))
                 cfg.opts.os_variant = o
             else:
                 print(c.yellow("  WARN: Invalid os-variant -- '{}' not listed by command: osinfo-query os -f short-id".format(o)))
-                c.verbose("  INFO: Guest OS will not use any special hypervisor features like virt-io")
+                c.verbose("Guest OS will not use any special hypervisor features like virt-io")
                 cfg.opts.os_variant = None
 
 def prompt_final_checks():

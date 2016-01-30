@@ -48,7 +48,7 @@ def initialize_libvirt_qemu_session():
             print("(Contact rsaw@redhat.com)")
             exit(1)
         try:
-            cfg.debug("Executing: {}".format(" ".join(cmd)))
+            c.debug("Executing: {}".format(" ".join(cmd)))
             with open(os.devnull, 'w') as n:
                 subprocess.check_call(cmd, stdout=n)
         except subprocess.CalledProcessError:
@@ -59,17 +59,13 @@ def initialize_libvirt_qemu_session():
         loopCount += 1
 
 def build():
-    c.verbose("  INFO: Initializing libvirt connection to qemu:///session")
+    c.verbose("Initializing libvirt connection to qemu:///session")
     initialize_libvirt_qemu_session()
     o = cfg.opts
     cmd = [
         'virt-builder', o.templateName,
         '--output', o.outFile
         ]
-    if cfg.debugLvl >= 2:
-        cmd.append('-v')
-    if cfg.debugLvl >= 3:
-        cmd.append('-x')
     if o.vbCachedir:
         cmd.extend(['--cache', o.vbCachedir])
     if not o.hostname in '!':
@@ -125,8 +121,8 @@ def build():
     cmd.extend(['--firstboot', tmp1.name])
     if os.path.isfile(cfg.defaultRegisterScript):
         cmd.extend(['--upload', '{}:/root/register.sh'.format(cfg.defaultRegisterScript)])
-    c.verbose("  INFO: Starting virt-builder")
-    cfg.debug("Executing:\n  {}\n".format(" \ \n  ".join(cmd)))
+    c.verbose("Starting virt-builder")
+    c.debug("Executing:\n    {}\n".format(" \ \n    ".join(cmd)))
     try:
         subprocess.check_call(cmd)
     except subprocess.CalledProcessError:

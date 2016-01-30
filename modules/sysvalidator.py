@@ -27,7 +27,7 @@ def ret(returnCode):
 
 def call(cmd, showStdout=False, showStderr=False, shell=False):
     """Execute *cmd* and return True on success."""
-    cfg.debug("Executing: {}".format(" ".join(cmd)))
+    c.debug("Executing: {}".format(" ".join(cmd)))
     null = open(os.devnull, 'w')
     out = err = None
     if not showStdout:
@@ -124,7 +124,7 @@ def check_user_in_libvirt_group():
         exit(1)
 
 def check_for_writable_imgdir():
-    cfg.debug("Testing write perms by creating tempfile in {}".format(cfg.opts.imgdir))
+    c.debug("Testing write perms by creating tempfile in {}".format(cfg.opts.imgdir))
     try:
         f = tempfile.TemporaryFile(dir=cfg.opts.imgdir)
         f.close()
@@ -144,7 +144,7 @@ def check_for_writable_imgdir():
 def try_capture_existing_vm_names():
     """Capture list of existing VM names and exit on failure."""
     cmd = ['virsh', 'list', '--all', '--name']
-    cfg.debug("Executing: {}".format(" ".join(cmd)))
+    c.debug("Executing: {}".format(" ".join(cmd)))
     try:
         cfg.guestList = subprocess.check_output(cmd)
     except:
