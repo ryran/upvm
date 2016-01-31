@@ -83,6 +83,8 @@ def build():
         cmd.extend(['--size', o.size])
     if o.format:
         cmd.extend(['--format', o.format])
+    if o.timezone:
+        cmd.extend(['--timezone', o.timezone])
     if o.upload:
         for upfile in o.upload:
             cmd.extend(['--upload', upfile])
@@ -106,9 +108,6 @@ def build():
             cmd.extend(['--firstboot-install', pkgs])
     if o.selinux_relabel or o.install:
         cmd.append('--selinux-relabel')
-    # if o.cmdlineArgs:
-    #     for arg in o.cmdlineArgs[1:]:
-    #         cmd.append(arg)
     tmp1 = tempfile.NamedTemporaryFile(delete=True)
     tmp1.write(firstBootScriptStart)
     if o.ssh_pubkey:
@@ -121,6 +120,9 @@ def build():
     cmd.extend(['--firstboot', tmp1.name])
     if os.path.isfile(cfg.defaultRegisterScript):
         cmd.extend(['--upload', '{}:/root/register.sh'.format(cfg.defaultRegisterScript)])
+    if o.vbuilder_arg:
+        for a in o.vbuilder_arg:
+            cmd.append(a)
     c.verbose("Starting virt-builder")
     c.debug("Executing:\n    {}\n".format(" \ \n    ".join(cmd)))
     try:

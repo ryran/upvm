@@ -175,6 +175,9 @@ def parse():
         '--format', choices=['auto', 'raw', 'qcow2'], default='auto',
         help="Set output disk image format (default: 'auto', to auto-detect based on input image format; however, until this is implemented in virt-builder, it will fallback to qcow2)")
     grpAA.add_argument(
+        '--timezone',
+        help="Set system timezone inside the OS (use traditional syntax, i.e., paths rooted in /usr/share/zoneinfo, e.g.: 'Europe/London' or 'America/Los_Angeles' or 'Asia/Calcutta')")
+    grpAA.add_argument(
         '--rhsm-key', metavar='ORGID:KEY',
         help="With or without this option, {} creates a /root/register script inside the guest which can be used to interactively register to RHN Classic or RHSM; this option edits that script to include an RHSM activation key created by you at access.redhat.com/management/activation_keys -- i.e., so the script can be run without requiring a user/password (to use this option, specify both the organization ID and the activation key, e.g., '0123456789:my_activation_key'); IMPORTANT NOTE: this does not run the /root/register script for you".format(cfg.prog))
     grpAA.add_argument(
@@ -205,6 +208,9 @@ def parse():
     grpAA.add_argument(
         '--selinux-relabel', action='store_true',
         help="Trigger an SELinux relabel on first boot (critical if any important files are changed)")
+    grpAA.add_argument(
+        '--vbuilder-arg', '-B', metavar='ARG', action='append',
+        help="Add ARG as an extra option/argument to the virt-builder command which creates the disk image (may be used more than once; NOTE: to pass options that start with a dash, use '--vbuilder-arg=--option' or '-B=-o', for example: '-B=--verbose -B=--update -B=--copy-in=/localpath:/mnt/remote')")
     # Optional virt-install options
     grpBB = p.add_argument_group(
         'TOTALLY OPTIONAL HARDWARE-LEVEL (VM) OPTIONS',
@@ -221,12 +227,9 @@ def parse():
     grpBB.add_argument(
         '-w', '--network', metavar='OPTIONS', action='append',
         help="If this option is omitted, a single NIC will be created in the guest and connected to a bridge (if one exists) or the 'default' virtual network; if this option is used once it will modify the default NIC; this option can be specified multiple times to setup more than one NIC; in its simplest form OPTIONS can be 'bridge=BRIDGE' (where BRIDGE is a bridge device name, e.g., 'br0') or 'network=NAME' (where NAME is a virtual network, e.g., 'default'); more complicated example: '-w network=default -w bridge=br0' (where the 1st NIC would be connected to the default private network and the 2nd would be connected to the [presumably public] bridge br0)")
-    # # Extra opts
-    # grpZ = p.add_argument_group(
-    #     'EXTRA OPTIONS')
-    # grpZ.add_argument(
-    #     'cmdlineArgs', metavar='...', nargs=configargparse.REMAINDER,
-    #     help="To pass arbitrary options & args to virt-builder, use '{} OPTS -- EXTRA-VB-OPTS'; all arguments after the '--' are assumed to be virt-builder options and will be passed without checking".format(cfg.prog))
+    grpBB.add_argument(
+        '--vinstall-arg', '-I', metavar='ARG', action='append',
+        help="Add ARG as an extra option/argument to the virt-install command which creates a guest from the vb-created disk image (may be used more than once; NOTE: to pass options that start with a dash, use '--vinstall-arg=--option' or '-I=-o', for example: '-I=--cpu=core2duo -I=--video=cirrus -I=--graphics=vnc,password=mypass')")
     # Parse and return
     if haveArgcomplete:
         argcomplete.autocomplete(p)
