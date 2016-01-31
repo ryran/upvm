@@ -27,12 +27,13 @@ usage: upvm [--loglevel {debug,info,error}] [--build-image-only] [--nocolor]
             [--info] [-n VMNAME] [--os-variant OS] [--root-password SELECTOR]
             [--dnsdomain DOMAIN] [--hostname HOSTNAME | --hostname-prompt]
             [--no-dhcphostname] [--imgdir DIR] [--size SIZE]
-            [--format {auto,raw,qcow2}] [--rhsm-key ORGID:KEY]
-            [--ssh-pubkey FILE] [--upload FILE:DEST] [--run SCRIPT]
-            [--run-command CMD+ARGS] [--firstboot SCRIPT]
+            [--format {auto,raw,qcow2}] [--timezone TIMEZONE]
+            [--rhsm-key ORGID:KEY] [--ssh-pubkey FILE] [--upload FILE:DEST]
+            [--run SCRIPT] [--run-command CMD+ARGS] [--firstboot SCRIPT]
             [--firstboot-command CMD+ARGS] [--install PKG,PKG,@GROUP...]
             [--firstboot-install PKG,PKG,@GROUP...] [--selinux-relabel]
-            [-m OPTIONS] [-c OPTIONS] [-d OPTIONS] [-w OPTIONS]
+            [--vbuilder-arg ARG] [-m OPTIONS] [-c OPTIONS] [-d OPTIONS]
+            [-w OPTIONS] [--vinstall-arg ARG]
             [TEMPLATE]
 
 Leverage virt-builder & virt-install to spin up new VMs with ease
@@ -120,6 +121,10 @@ TOTALLY OPTIONAL OS-LEVEL OPTIONS:
                         auto-detect based on input image format; however,
                         until this is implemented in virt-builder, it will
                         fallback to qcow2)
+  --timezone TIMEZONE   Set system timezone inside the OS (use traditional
+                        syntax, i.e., paths rooted in /usr/share/zoneinfo,
+                        e.g.: 'Europe/London' or 'America/Los_Angeles' or
+                        'Asia/Calcutta')
   --rhsm-key ORGID:KEY  With or without this option, upvm creates a
                         /root/register script inside the guest which can be
                         used to interactively register to RHN Classic or RHSM;
@@ -163,6 +168,13 @@ TOTALLY OPTIONAL OS-LEVEL OPTIONS:
                         than once)
   --selinux-relabel     Trigger an SELinux relabel on first boot (critical if
                         any important files are changed)
+  --vbuilder-arg, -B ARG
+                        Add ARG as an extra option/argument to the virt-
+                        builder command which creates the disk image (may be
+                        used more than once; NOTE: to pass options that start
+                        with a dash, use '--vbuilder-arg=--option' or '-B=-o',
+                        for example: '-B=--verbose -B=--update -B=--copy-
+                        in=/localpath:/mnt/remote')
 
 TOTALLY OPTIONAL HARDWARE-LEVEL (VM) OPTIONS:
   Guest hardware configured by virt-install (after image is built). Each option
@@ -196,6 +208,14 @@ TOTALLY OPTIONAL HARDWARE-LEVEL (VM) OPTIONS:
                         1st NIC would be connected to the default private
                         network and the 2nd would be connected to the
                         [presumably public] bridge br0)
+  --vinstall-arg, -I ARG
+                        Add ARG as an extra option/argument to the virt-
+                        install command which creates a guest from the vb-
+                        created disk image (may be used more than once; NOTE:
+                        to pass options that start with a dash, use
+                        '--vinstall-arg=--option' or '-I=-o', for example:
+                        '-I=--cpu=core2duo -I=--video=cirrus
+                        -I=--graphics=vnc,password=mypass')
 
 VERSION:
   upvm v0.10.0~rc last mod 2016/01/30
