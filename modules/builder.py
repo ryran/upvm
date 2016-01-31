@@ -79,10 +79,10 @@ def build():
         cmd.extend(['--arch', o.arch])
     if o.root_password:
         cmd.extend(['--root-password', o.root_password])
-    if o.size:
-        cmd.extend(['--size', o.size])
-    if o.format:
-        cmd.extend(['--format', o.format])
+    if o.img_size:
+        cmd.extend(['--size', o.img_size])
+    if o.img_format:
+        cmd.extend(['--format', o.img_format])
     if o.timezone:
         cmd.extend(['--timezone', o.timezone])
     if o.upload:

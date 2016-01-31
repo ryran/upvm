@@ -96,24 +96,24 @@ def check_prompt_hostname():
             cfg.opts.hostname = _default_name
 
 def checkset_img_format():
-    if cfg.opts.format in 'auto':
-        cfg.opts.format = cfg.templateInfo.get('format')
-        if not cfg.opts.format or cfg.opts.format == 'qcow2' or cfg.opts.format == 'raw':
+    if cfg.opts.img_format in 'auto':
+        cfg.opts.img_format = cfg.templateInfo.get('format')
+        if not cfg.opts.img_format or cfg.opts.img_format == 'qcow2' or cfg.opts.img_format == 'raw':
             c.verbose("Unable to determine native format of chosen template")
             c.verbose("Using qcow2 for output format (change with --format=raw)")
-            cfg.opts.format = 'qcow2'
+            cfg.opts.img_format = 'qcow2'
 
 def check_prompt_img_outfilepath():
-    cfg.opts.outFile = '{}/{}'.format(cfg.opts.imgdir, cfg.opts.vmname)
-    if cfg.opts.format in 'qcow2':
+    cfg.opts.outFile = '{}/{}'.format(cfg.opts.img_dir, cfg.opts.vmname)
+    if cfg.opts.img_format in 'qcow2':
         cfg.opts.outFile += '.qcow2'
     # Ensure image file doesn't exist
     while os.path.exists(cfg.opts.outFile):
-        print(c.YELLOW("Already have an image file with the name '{}' (in dir '{}')".format(os.path.basename(cfg.opts.outFile), cfg.opts.imgdir)))
+        print(c.YELLOW("Already have an image file with the name '{}' (in dir '{}')".format(os.path.basename(cfg.opts.outFile), cfg.opts.img_dir)))
         if not stdout.isatty():
             exit(1)
         _x = raw_input(c.CYAN("\nEnter a unique image file name (not incl. path) : "))
-        cfg.opts.outFile = '{}/{}'.format(cfg.opts.imgdir, _x)
+        cfg.opts.outFile = '{}/{}'.format(cfg.opts.img_dir, _x)
 
 def checkset_validate_osvariant():
     _adjective = "Chosen"

@@ -26,8 +26,8 @@ usage: upvm [--loglevel {debug,info,error}] [--build-image-only] [--nocolor]
             [--arch {x86_64,i386,i686,ia64,armv71,ppc,ppc64,ppc64le,aarch64,sparc64,s390,s390x}]
             [--info] [-n VMNAME] [--os-variant OS] [--root-password SELECTOR]
             [--dnsdomain DOMAIN] [--hostname HOSTNAME | --hostname-prompt]
-            [--no-dhcphostname] [--imgdir DIR] [--size SIZE]
-            [--format {auto,raw,qcow2}] [--timezone TIMEZONE]
+            [--no-dhcphostname] [--img-dir DIR] [--img-size SIZE]
+            [--img-format {auto,raw,qcow2}] [--timezone TIMEZONE]
             [--rhsm-key ORGID:KEY] [--ssh-pubkey FILE] [--upload FILE:DEST]
             [--run SCRIPT] [--run-command CMD+ARGS] [--firstboot SCRIPT]
             [--firstboot-command CMD+ARGS] [--install PKG,PKG,@GROUP...]
@@ -103,13 +103,13 @@ TOTALLY OPTIONAL OS-LEVEL OPTIONS:
                         + value of DOMAIN with no prompt)
   --no-dhcphostname     Disable the default behavior of adding
                         'DHCP_HOSTNAME=<HOSTNAME>' to ifcfg-eth0
-  --imgdir DIR          Set directory where image file will be saved to and
+  --img-dir DIR         Set directory where image file will be saved to and
                         launched from (default: '/var/lib/upvm' which is a
                         simple directory-backed libvirt storage pool named
                         'upvm')
-  --size SIZE           Set output disk image size (default: native template
+  --img-size SIZE       Set output disk image size (default: native template
                         size; example: '7G')
-  --format {auto,raw,qcow2}
+  --img-format {auto,raw,qcow2}
                         Set output disk image format (default: 'auto', to
                         auto-detect based on input image format; however,
                         until this is implemented in virt-builder, it will

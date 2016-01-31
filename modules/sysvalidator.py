@@ -105,9 +105,9 @@ def testconnect_hypervisor():
         exit(1)
 
 def check_for_missing_imgdir():
-    if not os.path.isdir(cfg.opts.imgdir):
-        print(c.RED("Image dir '{}' does not exist".format(cfg.opts.imgdir)))
-        if cfg.opts.imgdir == '/var/lib/{}'.format(cfg.prog):
+    if not os.path.isdir(cfg.opts.img_dir):
+        print(c.RED("Image dir '{}' does not exist".format(cfg.opts.img_dir)))
+        if cfg.opts.img_dir == '/var/lib/{}'.format(cfg.prog):
             print("You need to execute the initial setup program -- as root run:")
             print(c.green("  /usr/share/{}/initial-setup".format(cfg.prog)))
         exit(1)
@@ -124,21 +124,21 @@ def check_user_in_libvirt_group():
         exit(1)
 
 def check_for_writable_imgdir():
-    c.debug("Testing write perms by creating tempfile in {}".format(cfg.opts.imgdir))
+    c.debug("Testing write perms by creating tempfile in {}".format(cfg.opts.img_dir))
     try:
-        f = tempfile.TemporaryFile(dir=cfg.opts.imgdir)
+        f = tempfile.TemporaryFile(dir=cfg.opts.img_dir)
         f.close()
     except:
-        dirstat = os.stat(cfg.opts.imgdir)
+        dirstat = os.stat(cfg.opts.img_dir)
         user = pwd.getpwuid(dirstat.st_uid).pw_name
         group = grp.getgrgid(dirstat.st_gid).gr_name
-        print(c.RED("Unable to create new file in image dir '{}' owned by {}:{}".format(cfg.opts.imgdir, user, group)))
+        print(c.RED("Unable to create new file in image dir '{}' owned by {}:{}".format(cfg.opts.img_dir, user, group)))
         if myUser in grp.getgrnam(group).gr_mem:
             print("Your user ({}) *is* a member of the appropriate group ({}); however ...\n"
                   "Your current login session is not running with that group credential\n"
                   "To fix this, open a new session (ssh/su -) or log out & log back in (GUI)".format(myUser, group))
         else:
-            print("Either fix directory permissions as root or specify alternate dir with '--imgdir' option")
+            print("Either fix directory permissions as root or specify alternate dir with '--img-dir' option")
         exit(1)
 
 def try_capture_existing_vm_names():

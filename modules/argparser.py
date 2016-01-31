@@ -177,13 +177,13 @@ def parse():
         '--no-dhcphostname', dest='add_dhcp_hostname', action='store_false',
         help="Disable the default behavior of adding 'DHCP_HOSTNAME=<HOSTNAME>' to ifcfg-eth0")
     grpAA.add_argument(
-        '--imgdir', metavar='DIR', default='/var/lib/{}'.format(cfg.prog),
+        '--img-dir', metavar='DIR', default='/var/lib/{}'.format(cfg.prog),
         help="Set directory where image file will be saved to and launched from (default: '/var/lib/{0}' which is a simple directory-backed libvirt storage pool named '{0}')".format(cfg.prog))
     grpAA.add_argument(
-        '--size',
+        '--img-size', metavar='SIZE',
         help="Set output disk image size (default: native template size; example: '7G')")
     grpAA.add_argument(
-        '--format', choices=['auto', 'raw', 'qcow2'], default='auto',
+        '--img-format', choices=['auto', 'raw', 'qcow2'], default='auto',
         help="Set output disk image format (default: 'auto', to auto-detect based on input image format; however, until this is implemented in virt-builder, it will fallback to qcow2)")
     grpAA.add_argument(
         '--timezone',
