@@ -20,12 +20,12 @@ from . import string_ops as c
 firstBootScriptStart = dedent("""\
     #!/bin/bash
     echo "Installing authorized ssh pubkey(s) for root user ..."
-    mkdir -p ~/.ssh
-    chmod 700 ~/.ssh
-    touch ~/.ssh/authorized_keys
-    chmod 600 ~/.ssh/authorized_keys
-    restorecon -R ~/.ssh
-    cat >> ~/.ssh/authorized_keys <<\EOF
+    mkdir -vp /root/.ssh
+    chmod -v 700 /root/.ssh
+    touch /root/.ssh/authorized_keys
+    chmod -v 600 /root/.ssh/authorized_keys
+    restorecon -Rv /root/.ssh
+    cat >> /root/.ssh/authorized_keys <<\EOF
     """)
 
 firstBootScriptEnd = dedent("""\
@@ -35,7 +35,7 @@ firstBootScriptEnd = dedent("""\
     #run-parts /etc/cron.daily
     #echo Done.
     systemctl disable firstboot 2>/dev/null
-    rm /etc/rc?.d/S99virt-sysprep-firstboot
+    rm -v /etc/rc?.d/S99virt-sysprep-firstboot
     echo One-time firstboot script finished.
     """)
 
