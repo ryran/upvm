@@ -158,6 +158,9 @@ TOTALLY OPTIONAL OS-LEVEL OPTIONS:
   --firstboot-install PKG,PKG,@GROUP...
                         Configure disk image such that when guest first boots
                         it will install named package(s) (may be used more
+                        than once)
+  --selinux-relabel     Trigger an SELinux relabel on first boot (critical if
+                        any important files are changed)
   --vbuilder-arg, -B ARG
                         Add ARG as an extra option/argument to the virt-
                         builder command which creates the disk image (may be
