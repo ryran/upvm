@@ -71,16 +71,27 @@ class CustomFormatter(argparse.RawDescriptionHelpFormatter):
 def parse():
     fmt = lambda prog: CustomFormatter(cfg.prog)
     description = "Leverage virt-builder & virt-install to spin up new VMs with ease"
-    if haveConfigargparse:
-        description += "\n\nNote:"
     version = "{} v{} last mod {}".format(cfg.prog, cfg.__version__, cfg.__date__)
-    epilog = (
-        "VERSION:\n"
-        "  {}\n"
-        "  See <http://github.com/ryran/upvm> to report bugs or RFEs").format(version)
+    epilog = ""
+    if haveConfigargparse:
+        epilog += (
+            "ABOUT CONFIG FILES:\n"
+            "  All of the above options can also be set in config files {0} or\n"
+            "  {1} (e.g., 'loglevel = debug') or specified via environment\n"
+            "  variables capitalized and prefixed with '{2}_' (e.g., {2}_LOGLEVEL=debug).\n"
+            "  See {3} for examples of proper config-file syntax\n"
+            "  and keep in mind that cmdline values override environment variables which\n"
+            "  override config file values which override defaults.\n\n").format(cfg.cfgfileSystem, cfg.cfgfileUser, cfg.prog.upper(), cfg.cfgfileExample)
+    epilog += (
+            "VERSION:\n"
+            "  {}\n"
+            "  See <http://github.com/ryran/upvm> to report bugs or RFEs").format(version)
     if haveConfigargparse:
         p = argparse.ArgumentParser(
-            default_config_files=[cfg.cfgfileDefault, cfg.cfgfileSystem, cfg.cfgfileUser],
+            add_config_file_help=False,
+            add_env_var_help=False,
+            auto_env_var_prefix="{}_".format(cfg.prog.upper()),
+            default_config_files=[cfg.cfgfileSystem, cfg.cfgfileUser],
             prog=cfg.prog,
             description=description,
             add_help=False,

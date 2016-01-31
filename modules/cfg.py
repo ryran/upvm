@@ -20,7 +20,7 @@ __date__    = '2016/01/30'
 prog = 'upvm'
 
 # Set config file locations used by configargparse
-cfgfileDefault = '/usr/share/{}/example.conf'.format(prog)
+cfgfileExample = '/usr/share/{}/example.conf'.format(prog)
 cfgfileSystem = '/etc/{}.conf'.format(prog)
 cfgfileUser = '~/.config/{}.conf'.format(prog)
 

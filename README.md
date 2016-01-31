@@ -38,13 +38,6 @@ usage: upvm [--loglevel {debug,info,error}] [--build-image-only] [--nocolor]
 
 Leverage virt-builder & virt-install to spin up new VMs with ease
 
-Note: Args that start with '--' (eg. --debug) can also be set in a config file
-(/usr/share/upvm/example.conf or /etc/upvm.conf or ~/.config/upvm.conf or ). The recognized
-syntax for setting (key, value) pairs is based on the INI and YAML formats (e.g. key=value or
-foo=TRUE). For full documentation of the differences from the standards please refer to the
-ConfigArgParse documentation. If an arg is specified in more than one place, then commandline
-values override config file values which override defaults.
-
 SIMPLE OPTIONS:
   Tweak runtime behavior of upvm.
 
@@ -165,9 +158,6 @@ TOTALLY OPTIONAL OS-LEVEL OPTIONS:
   --firstboot-install PKG,PKG,@GROUP...
                         Configure disk image such that when guest first boots
                         it will install named package(s) (may be used more
-                        than once)
-  --selinux-relabel     Trigger an SELinux relabel on first boot (critical if
-                        any important files are changed)
   --vbuilder-arg, -B ARG
                         Add ARG as an extra option/argument to the virt-
                         builder command which creates the disk image (may be
@@ -216,6 +206,14 @@ TOTALLY OPTIONAL HARDWARE-LEVEL (VM) OPTIONS:
                         '--vinstall-arg=--option' or '-I=-o', for example:
                         '-I=--cpu=core2duo -I=--video=cirrus
                         -I=--graphics=vnc,password=mypass')
+
+ABOUT CONFIG FILES:
+  All of the above options can also be set in config files /etc/upvm.conf or
+  ~/.config/upvm.conf (e.g., 'loglevel = debug') or specified via environment
+  variables capitalized and prefixed with 'UPVM_' (e.g., UPVM_LOGLEVEL=debug).
+  See /usr/share/upvm/example.conf for examples of proper config-file syntax
+  and keep in mind that cmdline values override environment variables which
+  override config file values which override defaults.
 
 VERSION:
   upvm v0.10.0~rc last mod 2016/01/30
