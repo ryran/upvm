@@ -3,7 +3,7 @@ Leverage virt-builder &amp; virt-install to spin up new VMs with ease
 
 ### Upcoming release
 
-Date of [first release](https://github.com/ryran/upvm/milestones/0.10.0%20albino%20salamander%20%28first%20release%29) (including rpm for RHEL7/Fedora): Sunday January 31st
+Date of [first release](https://github.com/ryran/upvm/milestones/0.10.0%20albino%20salamander%20%28first%20release%29) (including rpm for RHEL7/Fedora): Monday February 1st
 
 ### Requirements
 
