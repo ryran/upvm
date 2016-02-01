@@ -43,7 +43,7 @@ def check_prompt_root_pw():
             save_passwd = raw_input(c.CYAN("Save password choice as default to '{}'? ".format(cfg.cfgfileUser)) + c.BOLD("[y]/n") + c.CYAN(" : "))
             if save_passwd != 'n':
                 subprocess.call(['mkdir', '-p', os.path.dirname(cfg.cfgfileUser)])
-                with open(os.path.expanduser(cfg.cfgfileUser), 'a') as f:
+                with open(os.path.expanduser(cfg.cfgfileUser), 'a+') as f:
                     f.write('# Added by {}:\nroot-password = {}\n'.format(cfg.prog, cfg.opts.root_password))
                 c.verbose("Wrote 'root-password = {}' to {}".format(cfg.opts.root_password, cfg.cfgfileUser))
         else:

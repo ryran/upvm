@@ -22,7 +22,7 @@ def install():
         '--vcpus',
         str(o.vcpus),
         '--disk',
-        '{},format={}'.format(o.outFile, o.format),
+        '{},format={}'.format(o.outFile, o.img_format),
         '--noautoconsole',
         ]
     if o.os_variant:
