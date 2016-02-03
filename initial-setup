@@ -16,11 +16,6 @@ if getenforce | egrep -sq '^(Permissive|Enforcing)$' && ! command -v semanage >/
     exit 1
 fi
 
-prg=upvm
-cacheDir="/var/cache/$prg"
-imageDir="/var/lib/$prg"
-domain=example.com
-
 if getent group libvirt >/dev/null; then
     libvirtGID=$(getent group libvirt | cut -d: -f3)
 else
@@ -41,6 +36,22 @@ else
     echo Aborting
     exit 1
 fi
+
+if ! systemctl is-active libvirtd.service &>/dev/null; then
+    echo -e "\nStarting libvirtd.service ...\n"
+    systemctl start libvirtd.service
+fi
+
+if ! virt-host-validate; then
+    echo -e "\nvirt-host-validate command failed"
+    echo "You probably need to enable hardware virtualization in BIOS/UEFI"
+    exit 1
+fi
+
+prg=upvm
+cacheDir="/var/cache/$prg"
+imageDir="/var/lib/$prg"
+domain=example.com
 
 promptok() {
     read -ep "Continue? [y/n] "

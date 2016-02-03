@@ -1,21 +1,27 @@
 # upvm
 Leverage virt-builder &amp; virt-install to spin up new VMs with ease
 
-### Upcoming release
-
-Date of [first release](https://github.com/ryran/upvm/milestones/0.10.0%20albino%20salamander%20%28first%20release%29) (including rpm for RHEL7/Fedora): Monday February 1st
-
 ### Requirements
 
 You need:
 
-- libvirt, libguestfs-tools (`virt-builder`), virt-install
+- libvirtd & libvirt-client (`virsh`)
+- libguestfs-tools (`virt-builder`)
+- virt-install
 
-These two are not required, but are highly recommended:
+These two are not required, but are highly recommended for bash-tab-completion & config-file support:
  
-1. `pip install argcomplete; activate-global-python-argcomplete`
-1. `pip install configargparse`
+- `pip install argcomplete; activate-global-python-argcomplete`
+- `pip install configargparse`
 
+### Install
+
+You can clone the git repo and execute `upvm.py` from it. For rpm installation in RHEL 7.2+ and Fedora 22+:
+
+1. `dnf install http://people.redhat.com/rsawhill/rpms/latest-rsawaroha-release.rpm`
+1. `dnf install upvm`
+1. `/usr/share/upvm/initial-setup`
+1. `upvm -h`
 
 ### Help page
 
@@ -219,6 +225,6 @@ ABOUT CONFIG FILES:
   override config file values which override defaults.
 
 VERSION:
-  upvm v0.10.0~rc last mod 2016/01/30
+  upvm v0.10.0 last mod 2016/02/02
   See <http://github.com/ryran/upvm> to report bugs or RFEs
 ```
