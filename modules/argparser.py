@@ -4,6 +4,7 @@
 
 # Modules from standard library
 from __future__ import print_function
+from platform import machine
 from sys import exit, stderr
 try:
     import configargparse as argparse
@@ -141,8 +142,8 @@ def parse():
         '-l', '--list', action='store_true',
         help="List available templates")
     grpA.add_argument(
-        '--arch', choices=['x86_64', 'i386', 'i686', 'ia64', 'armv71', 'ppc', 'ppc64', 'ppc64le', 'aarch64', 'sparc64', 's390', 's390x'],
-        help="Specify architecture (defaults to same architecture you're running)")
+        '--arch', choices=['x86_64', 'i386', 'i686', 'ia64', 'armv71', 'ppc', 'ppc64', 'ppc64le', 'aarch64', 'sparc64', 's390', 's390x'], default=machine(),
+        help="Specify architecture in case there are multiple choices (defaults to same architecture as {})".format(cfg.prog))
     grpA.add_argument(
         '--info', dest='showMetadataOnly', action='store_true',
         help="Print virt-builder metadata for chosen template")

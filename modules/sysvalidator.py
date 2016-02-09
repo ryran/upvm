@@ -72,7 +72,7 @@ def check_if_requested_template_exists():
 def isolate_metadata_for_chosen_vb_template():
     """Save json for chosen virt-builder template."""
     for template in cfg.templateList:
-        if template['os-version'] == cfg.opts.templateName:
+        if template['os-version'] == cfg.opts.templateName and template['arch'] == cfg.opts.arch:
             cfg.templateInfo = template
 
 def if_metadata_requested_then_print_and_quit():
