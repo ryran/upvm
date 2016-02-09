@@ -17,6 +17,14 @@ from sys import exit
 from . import cfg
 from . import string_ops as c
 
+ifcfgDhcpHostnameScript = dedent("""\
+    #!/bin/sh
+    # FIXME: See if we need to add logic for Debian/Ubuntu, openSUSE
+    if [ -f /etc/sysconfig/network-scripts/ifcfg-eth0 ]; then
+        printf 'DEVICE=eth0\nDHCP_HOSTNAME={}\n' >>/etc/sysconfig/network-scripts/ifcfg-eth0
+    fi
+    """.format(cfg.opts.hostname))
+
 firstBootScriptStart = dedent("""\
     #!/bin/bash
     echo "Installing authorized ssh pubkey(s) for root user ..."
@@ -71,10 +79,10 @@ def build():
     if not o.hostname in '!':
         cmd.extend(['--hostname', o.hostname])
         if o.add_dhcp_hostname:
-            cmd.extend([
-                '--run-command',
-                'echo -e "DHCP_HOSTNAME={}\nDEVICE=eth0" >> /etc/sysconfig/network-scripts/ifcfg-eth0'.format(o.hostname),
-                ])
+            tmp0 = tempfile.NamedTemporaryFile(delete=True)
+            tmp0.write(ifcfgDhcpHostnameScript)
+            tmp0.flush()
+            cmd.extend(['--run', tmp0.name])
     if o.arch:
         cmd.extend(['--arch', o.arch])
     if o.root_password:
