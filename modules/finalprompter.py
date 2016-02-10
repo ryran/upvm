@@ -121,8 +121,8 @@ def checkset_validate_osvariant():
         _adjective = "Auto-detected"
         cfg.opts.os_variant = cfg.templateInfo.get('osinfo')
         if not cfg.opts.os_variant:
-            c.verbose("Chosen template doesn't include 'osinfo=' metadata")
-            c.verbose("Guest OS will not use any special hypervisor features like virt-io")
+            c.verbose("virt-builder reports no 'osinfo=' metadata for chosen template!")
+            c.verbose("GUEST WILL NOT USE VIRT-IO; YOU SHOULD SPECIFY --os-variant OPTION".format(cfg.prog))
     # Validate os-variant choice (if one made)
     if cfg.opts.os_variant:
         o = cfg.opts.os_variant
@@ -144,6 +144,10 @@ def checkset_validate_osvariant():
                 print(c.yellow("  WARN: Invalid os-variant -- '{}' not listed by command: osinfo-query os -f short-id".format(o)))
                 c.verbose("Guest OS will not use any special hypervisor features like virt-io")
                 cfg.opts.os_variant = None
+        if o and 'debian' in o:
+            if not cfg.opts.firstboot_command:
+                cfg.opts.firstboot_command = []
+            cfg.opts.firstboot_command.append('dpkg-reconfigure openssh-server')
 
 def prompt_final_checks():
     # Prompt for root password if none specified
