@@ -73,8 +73,8 @@ SELECTING INITIAL IMAGE TO BUILD:
   TEMPLATE              Specify the template to install from
   -l, --list            List available templates
   --arch {x86_64,i386,i686,ia64,armv71,ppc,ppc64,ppc64le,aarch64,sparc64,s390,s390x}
-                        Specify architecture (defaults to same architecture
-                        you're running)
+                        Specify architecture in case there are multiple
+                        choices (defaults to same architecture as upvm)
   --info                Print virt-builder metadata for chosen template
 
 IMPORTANT HARDWARE-LEVEL (VM) OPTIONS:
@@ -213,7 +213,7 @@ TOTALLY OPTIONAL HARDWARE-LEVEL (VM) OPTIONS:
                         created disk image (may be used more than once; NOTE:
                         to pass options that start with a dash, use
                         '--vinstall-arg=--option' or '-I=-o', for example:
-                        '-I=--cpu=core2duo -I=--video=cirrus
+                        '-I=--cpu=core2duo -I=--video=cirrus -I=--boot=uefi
                         -I=--graphics=vnc,password=mypass')
 
 ABOUT CONFIG FILES:
@@ -225,6 +225,6 @@ ABOUT CONFIG FILES:
   override config file values which override defaults.
 
 VERSION:
-  upvm v0.10.0 last mod 2016/02/02
+  upvm v0.10.3 last mod 2016/02/09
   See <http://github.com/ryran/upvm> to report bugs or RFEs
 ```

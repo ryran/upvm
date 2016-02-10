@@ -241,7 +241,7 @@ def parse():
         help="If this option is omitted, a single NIC will be created in the guest and connected to a bridge (if one exists) or the 'default' virtual network; if this option is used once it will modify the default NIC; this option can be specified multiple times to setup more than one NIC; in its simplest form OPTIONS can be 'bridge=BRIDGE' (where BRIDGE is a bridge device name, e.g., 'br0') or 'network=NAME' (where NAME is a virtual network, e.g., 'default'); more complicated example: '-w network=default -w bridge=br0' (where the 1st NIC would be connected to the default private network and the 2nd would be connected to the [presumably public] bridge br0)")
     grpBB.add_argument(
         '--vinstall-arg', '-I', metavar='ARG', action='append',
-        help="Add ARG as an extra option/argument to the virt-install command which creates a guest from the vb-created disk image (may be used more than once; NOTE: to pass options that start with a dash, use '--vinstall-arg=--option' or '-I=-o', for example: '-I=--cpu=core2duo -I=--video=cirrus -I=--graphics=vnc,password=mypass')")
+        help="Add ARG as an extra option/argument to the virt-install command which creates a guest from the vb-created disk image (may be used more than once; NOTE: to pass options that start with a dash, use '--vinstall-arg=--option' or '-I=-o', for example: '-I=--cpu=core2duo -I=--video=cirrus -I=--boot=uefi -I=--graphics=vnc,password=mypass')")
     # Parse and return
     if haveArgcomplete:
         argcomplete.autocomplete(p)
