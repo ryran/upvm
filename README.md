@@ -39,7 +39,7 @@ usage: upvm [--loglevel {debug,info,error}] [--build-image-only] [--nocolor]
             [--firstboot-command CMD+ARGS] [--install PKG,PKG,@GROUP...]
             [--firstboot-install PKG,PKG,@GROUP...] [--selinux-relabel]
             [--vbuilder-arg ARG] [-m OPTIONS] [-c OPTIONS] [-d OPTIONS]
-            [-w OPTIONS] [--vinstall-arg ARG]
+            [-w OPTIONS] [--boot OPTIONS | --uefi] [--vinstall-arg ARG]
             [TEMPLATE]
 
 Leverage virt-builder & virt-install to spin up new VMs with ease
@@ -192,7 +192,12 @@ TOTALLY OPTIONAL HARDWARE-LEVEL (VM) OPTIONS:
                         1,maxvcpus=4' (which would set the default 1 CPU but
                         allow raising to 4 without powering off)
   -d, --disk OPTIONS    In its simplest form OPTIONS can be 'size=N' to add a
-                        new disk of size N GiB to the guest
+                        new disk of size N GiB to the guest from the default
+                        storage pool (which will likely result in a new auto-
+                        named sparse qcow2 image file in
+                        /var/lib/libvirt/images); more examples: '-d
+                        device=cdrom' or '-d /path/iso,device=cdrom' or '-d
+                        /path/existing/file' or '-d pool=storagepool,size=5'
   -w, --network OPTIONS
                         If this option is omitted, a single NIC will be
                         created in the guest and connected to a bridge (if one
@@ -207,13 +212,20 @@ TOTALLY OPTIONAL HARDWARE-LEVEL (VM) OPTIONS:
                         1st NIC would be connected to the default private
                         network and the 2nd would be connected to the
                         [presumably public] bridge br0)
+  --boot OPTIONS        If this option is omitted, its value will default to
+                        'cdrom,hd,network,menu=on,useserial=on'
+  --uefi                This is option does not directly correspond to a virt-
+                        install option of the same name; this option can only
+                        be used if the above '--boot' is omitted; in that case
+                        it will result in adding 'uefi' to the above-mentioned
+                        default boot opts
   --vinstall-arg, -I ARG
                         Add ARG as an extra option/argument to the virt-
                         install command which creates a guest from the vb-
                         created disk image (may be used more than once; NOTE:
                         to pass options that start with a dash, use
                         '--vinstall-arg=--option' or '-I=-o', for example:
-                        '-I=--cpu=core2duo -I=--video=cirrus -I=--boot=uefi
+                        '-I=--cpu=core2duo -I=--video=cirrus
                         -I=--graphics=vnc,password=mypass')
 
 ABOUT CONFIG FILES:
@@ -225,6 +237,6 @@ ABOUT CONFIG FILES:
   override config file values which override defaults.
 
 VERSION:
-  upvm v0.10.3 last mod 2016/02/09
+  upvm v0.10.4 last mod 2016/02/12
   See <http://github.com/ryran/upvm> to report bugs or RFEs
 ```
