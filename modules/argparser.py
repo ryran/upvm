@@ -235,13 +235,20 @@ def parse():
         help="If this option is omitted, the guest will be allocated a single virtual CPU; in its simplest form OPTIONS can be the number of CPUs; more complicated example: '-c 1,maxvcpus=4' (which would set the default 1 CPU but allow raising to 4 without powering off)")
     grpBB.add_argument(
         '-d', '--disk', metavar='OPTIONS', action='append',
-        help="In its simplest form OPTIONS can be 'size=N' to add a new disk of size N GiB to the guest")
+        help="In its simplest form OPTIONS can be 'size=N' to add a new disk of size N GiB to the guest from the default storage pool (which will likely result in a new auto-named sparse qcow2 image file in /var/lib/libvirt/images); more examples: '-d device=cdrom' or '-d /path/iso,device=cdrom' or '-d /path/existing/file' or '-d pool=storagepool,size=5' ")
     grpBB.add_argument(
         '-w', '--network', metavar='OPTIONS', action='append',
         help="If this option is omitted, a single NIC will be created in the guest and connected to a bridge (if one exists) or the 'default' virtual network; if this option is used once it will modify the default NIC; this option can be specified multiple times to setup more than one NIC; in its simplest form OPTIONS can be 'bridge=BRIDGE' (where BRIDGE is a bridge device name, e.g., 'br0') or 'network=NAME' (where NAME is a virtual network, e.g., 'default'); more complicated example: '-w network=default -w bridge=br0' (where the 1st NIC would be connected to the default private network and the 2nd would be connected to the [presumably public] bridge br0)")
+    g3 = grpBB.add_mutually_exclusive_group()
+    g3.add_argument(
+        '--boot', metavar='OPTIONS',
+        help="If this option is omitted, its value will default to '{}'".format(cfg.virtinstall_default_bootopts))
+    g3.add_argument(
+        '--uefi', action='store_true',
+        help="This is option does not directly correspond to a virt-install option of the same name; this option can only be used if the above '--boot' is omitted; in that case it will result in adding 'uefi' to the above-mentioned default boot opts")
     grpBB.add_argument(
         '--vinstall-arg', '-I', metavar='ARG', action='append',
-        help="Add ARG as an extra option/argument to the virt-install command which creates a guest from the vb-created disk image (may be used more than once; NOTE: to pass options that start with a dash, use '--vinstall-arg=--option' or '-I=-o', for example: '-I=--cpu=core2duo -I=--video=cirrus -I=--boot=uefi -I=--graphics=vnc,password=mypass')")
+        help="Add ARG as an extra option/argument to the virt-install command which creates a guest from the vb-created disk image (may be used more than once; NOTE: to pass options that start with a dash, use '--vinstall-arg=--option' or '-I=-o', for example: '-I=--cpu=core2duo -I=--video=cirrus -I=--graphics=vnc,password=mypass')")
     # Parse and return
     if haveArgcomplete:
         argcomplete.autocomplete(p)

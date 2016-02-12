@@ -33,6 +33,13 @@ def install():
     if o.network:
         for n in o.network:
             cmd.extend(['--network', n])
+    if o.boot:
+        cmd.extend(['--boot', o.boot])
+    else:
+        o.boot = cfg.virtinstall_default_bootopts
+        if o.uefi:
+            o.boot += ',uefi'
+        cmd.extend(['--boot', o.boot])
     if o.vinstall_arg:
         for a in o.vinstall_arg:
             cmd.append(a)
