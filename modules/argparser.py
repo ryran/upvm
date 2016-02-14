@@ -4,6 +4,7 @@
 
 # Modules from standard library
 from __future__ import print_function
+import subprocess
 from platform import machine
 from sys import exit, stderr
 try:
@@ -258,7 +259,11 @@ def parse():
         print("\nRun {} --help for full help page".format(cfg.prog))
         exit()
     if o.showHelp:
-        p.print_help()
+        from tempfile import NamedTemporaryFile
+        tmp0 = NamedTemporaryFile(prefix='{}-help-'.format(cfg.prog), suffix='.txt')
+        p.print_help(file=tmp0)
+        tmp0.flush()
+        less = subprocess.call(['less', tmp0.name])
         exit()
     # Respect cmdline requests about color
     c.enableColor = o.enableColor

@@ -27,24 +27,24 @@ ifcfgDhcpHostnameScript = dedent("""\
 
 firstBootScriptStart = dedent("""\
     #!/bin/bash
-    echo "Installing authorized ssh pubkey(s) for root user ..."
-    mkdir -vp /root/.ssh
-    chmod -v 700 /root/.ssh
+    mkdir -p /root/.ssh
+    chmod 700 /root/.ssh
     touch /root/.ssh/authorized_keys
-    chmod -v 600 /root/.ssh/authorized_keys
-    restorecon -Rv /root/.ssh
+    chmod 600 /root/.ssh/authorized_keys
+    restorecon -R /root/.ssh
     cat >> /root/.ssh/authorized_keys <<\EOF
     """)
 
 firstBootScriptEnd = dedent("""\
     EOF
-    echo Done.
-    #echo Running cron.daily scripts ...
-    #run-parts /etc/cron.daily
-    #echo Done.
+    echo "Installed authorized SSH pubkey(s) for root user"
     systemctl disable firstboot 2>/dev/null
-    rm -v /etc/rc?.d/S99virt-sysprep-firstboot
-    echo One-time firstboot script finished.
+    rm /etc/rc?.d/S99virt-sysprep-firstboot 2>/dev/null
+    if command -v run-parts >/dev/null && [[ -d /etc/cron.daily ]]; then
+        run-parts /etc/cron.daily 2>/dev/null
+        echo "Finished first-run of /etc/cron.daily scripts (e.g. mandb)"
+    fi
+    echo "Finished one-time firstboot script."
     """)
 
 def initialize_libvirt_qemu_session():
@@ -79,7 +79,7 @@ def build():
     if not o.hostname in '!':
         cmd.extend(['--hostname', o.hostname])
         if o.add_dhcp_hostname:
-            tmp0 = tempfile.NamedTemporaryFile(delete=True)
+            tmp0 = tempfile.NamedTemporaryFile(prefix='{}-ifcfgdhcphostname-'.format(cfg.prog), suffix='.sh')
             tmp0.write(ifcfgDhcpHostnameScript)
             tmp0.flush()
             cmd.extend(['--run', tmp0.name])
@@ -116,7 +116,7 @@ def build():
             cmd.extend(['--firstboot-install', pkgs])
     if o.selinux_relabel or o.install:
         cmd.append('--selinux-relabel')
-    tmp1 = tempfile.NamedTemporaryFile(delete=True)
+    tmp1 = tempfile.NamedTemporaryFile(prefix='{}-firstboot-sshkeys-cleanup-'.format(cfg.prog), suffix='.sh')
     tmp1.write(firstBootScriptStart)
     if o.ssh_pubkey:
         for item in o.ssh_pubkey:

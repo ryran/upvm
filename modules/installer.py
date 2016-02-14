@@ -5,12 +5,25 @@
 # Modules from standard library
 from __future__ import print_function
 import subprocess
+import os
 
 # Custom modules
 from . import cfg
 from . import string_ops as c
 
+def purge_matching_ssh_known_hosts():
+    hostsfile = os.path.expanduser('~/.ssh/known_hosts')
+    regex = '^{0}(,|\s)|^{0}\.{1}(,|\s)'.format(cfg.opts.vmname, cfg.opts.dnsdomain)
+    cmd = ['grep', '-q', '-E', regex, hostsfile]
+    rc = subprocess.call(cmd)
+    if rc != 0:
+        return
+    cmd = ['sed', '-r', '-i', '/{}/d'.format(regex), hostsfile]
+    subprocess.call(cmd)
+    c.verbose("Purged ~/.ssh/known_hosts of existing [matching] host entry")
+
 def install():
+    purge_matching_ssh_known_hosts()
     o = cfg.opts
     cmd = [
         'virt-install',
