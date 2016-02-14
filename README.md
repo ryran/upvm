@@ -1,27 +1,36 @@
 # upvm
-Leverage virt-builder &amp; virt-install to spin up new VMs with ease
-
-### Requirements
-
-You need:
-
-- libvirtd & libvirt-client (`virsh`)
-- libguestfs-tools (`virt-builder`)
-- virt-install
-
-These two are not required, but are highly recommended for bash-tab-completion & config-file support:
- 
-- `pip install argcomplete; activate-global-python-argcomplete`
-- `pip install configargparse`
+Leverage `virt-builder` &amp; `virt-install` to spin up new VMs with ease
 
 ### Install
 
-You can clone the git repo and execute `upvm.py` from it OR for rpm installation in RHEL 7.2+ and Fedora 22+ you can do the following (which will pull in all required libvirt/libguestfs dependencies):
+yum/dnf (RPM) install in RHEL 7.2+ or Fedora 22+:
 
-1. `dnf install http://people.redhat.com/rsawhill/rpms/latest-rsawaroha-release.rpm`
-1. `dnf install upvm`
-1. `/usr/share/upvm/initial-setup`
-1. `upvm -h`
+```
+command -v dnf && dnf=dnf || dnf=yum
+$dnf install http://people.redhat.com/rsawhill/rpms/latest-rsawaroha-release.rpm
+$dnf install upvm
+/usr/share/upvm/initial-setup
+upvm -h
+```
+
+Non-rpm install:
+1. Install libguestfs-tools (`virt-builder` command)
+1. Make sure you have the `virsh` and `virt-install` commands as well
+1. `git clone https://github.com/ryran/upvm.git`
+1. `cd upvm`
+1. `sudo ./initial-setup`
+1. `./upvm.py -h`
+
+Regardless of install method, you will be missing 2 *HIGHLY-recommended* but *optional* python modules. One provides bash-tab-completion and the other provides config-file support. `upvm` will print warnings about this to stderr but if you want to get them now:
+
+1. If RHEL7, ensure access to [EPEL](https://fedoraproject.org/wiki/EPEL)
+1. `pip install argcomplete; activate-global-python-argcomplete`
+1. `pip install configargparse`
+
+### Once you have some new VMs ...
+
+Are you annoyed with always having to open the `virt-manager` GUI to do stuff with you VMs?
+- Get [valine](https://github.com/ryran/valine).
 
 ### Help page
 
@@ -237,6 +246,6 @@ ABOUT CONFIG FILES:
   override config file values which override defaults.
 
 VERSION:
-  upvm v0.10.4 last mod 2016/02/12
+  upvm v0.10.5 last mod 2016/02/14
   See <http://github.com/ryran/upvm> to report bugs or RFEs
 ```
