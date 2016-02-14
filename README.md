@@ -1,10 +1,23 @@
-# upvm
-Leverage `virt-builder` &amp; `virt-install` to spin up new VMs with ease
+# upvm - Leverage virt-builder &amp; virt-install to spin up new VMs with ease
 
-### Install
+## What?
+upvm aims to make it crazy easy to spin up new virtual machines using pre-installed OS-images provided by existing  [virt-builder](http://libguestfs.org/virt-builder.1.html) repos. Once an image is cached locally, the process of image creation + and guest instantiation should take less than a minute. Take a look:
 
-yum/dnf (RPM) install in RHEL 7.2+ or Fedora 22+:
+![upvm screenshot](http://people.redhat.com/rsawhill/upvm-demo1.png)
 
+#### Where?
+upvm supervises `virt-builder` and `virt-install` commands that connect to your local libvirt daemon. Virtual machine images will be saved (by default) to `/var/lib/upvm` and virtual machines will be started on your system.
+
+#### Why not vagrant? What about RHEV and OpenStack?
+upvm might not be for you if:
+
+- you've already invested the time to get vagrant to work for you
+- you already have all the images you need in a RHEV environment
+- you want to spin up new machines in an OpenStack cloud
+
+## Install
+
+#### yum/dnf (RPM) install in RHEL 7.2+ or Fedora 22+:
 ```
 command -v dnf && dnf=dnf || dnf=yum
 $dnf install http://people.redhat.com/rsawhill/rpms/latest-rsawaroha-release.rpm
@@ -13,8 +26,7 @@ $dnf install upvm
 upvm -h
 ```
 
-Non-rpm install:
-
+#### Non-rpm install:
 1. Install libguestfs-tools (`virt-builder` command)
 1. Make sure you have the `virsh` and `virt-install` commands as well
 1. `git clone https://github.com/ryran/upvm.git`
@@ -22,18 +34,19 @@ Non-rpm install:
 1. `sudo ./initial-setup`
 1. `./upvm.py -h`
 
+#### Optional extras:
 Regardless of install method, you will be missing 2 *HIGHLY-recommended* but *optional* python modules. One provides bash-tab-completion and the other provides config-file support. `upvm` will print warnings about this to stderr but if you want to get them now:
 
 1. If RHEL7, ensure access to [EPEL](https://fedoraproject.org/wiki/EPEL)
 1. `pip install argcomplete; activate-global-python-argcomplete`
 1. `pip install configargparse`
 
-### Once you have some new VMs ...
-
+## I have some VMs ...
 Are you annoyed with always having to open the `virt-manager` GUI to do stuff with you VMs?
+
 - Get [valine](https://github.com/ryran/valine).
 
-### Help page
+## Help page
 
 ```
 $ upvm --help
