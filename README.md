@@ -20,9 +20,9 @@ upvm might not be for you if:
 #### yum/dnf (RPM) install in RHEL 7.2+ or Fedora 22+:
 ```
 command -v dnf && dnf=dnf || dnf=yum
-$dnf install http://people.redhat.com/rsawhill/rpms/latest-rsawaroha-release.rpm
-$dnf install upvm
-/usr/share/upvm/initial-setup
+sudo $dnf install http://people.redhat.com/rsawhill/rpms/latest-rsawaroha-release.rpm
+sudo $dnf install upvm
+sudo /usr/share/upvm/initial-setup
 upvm -h
 ```
 
@@ -38,8 +38,10 @@ upvm -h
 Regardless of install method, you will be missing 2 *HIGHLY-recommended* but *optional* python modules. One provides bash-tab-completion and the other provides config-file support. `upvm` will print warnings about this to stderr but if you want to get them now:
 
 1. If RHEL7, ensure access to [EPEL](https://fedoraproject.org/wiki/EPEL)
-1. `pip install argcomplete; activate-global-python-argcomplete`
-1. `pip install configargparse`
+1. `sudo $dnf install pip`
+1. `sudo pip install argcomplete`
+1. `sudo activate-global-python-argcomplete`
+1. `sudo pip install configargparse`
 
 ## I have some VMs ...
 Are you annoyed with always having to open the `virt-manager` GUI to do stuff with you VMs?
