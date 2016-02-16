@@ -96,7 +96,10 @@ def check_prompt_hostname():
             cfg.opts.hostname = _default_name
 
 def checkset_img_format():
-    if cfg.opts.img_format in 'auto':
+    if cfg.opts.primary_blockdev:
+        c.verbose("Output image format unconditionally set to raw due to --primary-blockdev option")
+        cfg.opts.img_format = 'raw'
+    elif cfg.opts.img_format in 'auto':
         cfg.opts.img_format = cfg.templateInfo.get('format')
         if not cfg.opts.img_format or cfg.opts.img_format == 'qcow2' or cfg.opts.img_format == 'raw':
             c.verbose("Unable to determine native format of chosen template")

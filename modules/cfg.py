@@ -13,11 +13,14 @@ import json
 from . import string_ops as c
 
 # Version info
-__version__ = '0.10.5'
-__date__    = '2016/02/14'
+__version__ = '0.10.6'
+__date__    = '2016/02/16'
 
 # All references to program name should use this
 prog = 'upvm'
+
+# Path to helper blockdev script
+blockdevHelper = '/usr/libexec/{}-dd-helper.py'.format(prog)
 
 # Set config file locations used by configargparse
 cfgfileExample = '/usr/share/{}/example.conf'.format(prog)
@@ -74,3 +77,15 @@ def prompt_for_template_and_exit():
         exit()
     else:
         exit(1)
+
+def cleanup_imagefile():
+    try:
+        imgfile = opts.outFile
+    except:
+        return
+    try:
+        os.remove(imgfile)
+    except:
+        print(c.yellow("[Cleanup] Deleting image file '{}' failed; you can safely delete it yourself".format(imgfile)))
+    else:
+        c.verbose("[Cleanup] Deleted image file '{}'".format(imgfile))

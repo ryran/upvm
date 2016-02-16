@@ -6,6 +6,7 @@
 from __future__ import print_function
 import subprocess
 import os
+from sys import exit
 
 # Custom modules
 from . import cfg
@@ -34,10 +35,12 @@ def install():
         str(o.memory),
         '--vcpus',
         str(o.vcpus),
-        '--disk',
-        '{},format={}'.format(o.outFile, o.img_format),
         '--noautoconsole',
         ]
+    if o.primary_blockdev:
+        cmd.extend(['--disk', o.primary_blockdev])
+    else:
+        cmd.extend(['--disk', '{},format={}'.format(o.outFile, o.img_format)])
     if o.os_variant:
         cmd.extend(['--os-variant', o.os_variant])
     if o.disk:
@@ -58,4 +61,8 @@ def install():
             cmd.append(a)
     c.verbose("Starting virt-install")
     c.debug("Executing:\n    {}\n".format(" \ \n    ".join(cmd)))
-    subprocess.check_call(cmd)
+    rc = subprocess.call(cmd)
+    if rc != 0:
+        print(c.RED("Error: virt-install command exited with non-zero status (see above)"))
+        cfg.cleanup_imagefile()
+        exit(rc)
