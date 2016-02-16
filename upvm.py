@@ -87,6 +87,10 @@ def main():
     # Quit if requested
     if cfg.opts.build_image_only:
         exit()
+    # Write image to blockdevice if requested
+    if cfg.opts.primary_blockdev:
+        from modules import blockdevimager
+        blockdevimager.write_and_cleanup_image()
     # Launch virt-install
     from modules import installer
     installer.install()
@@ -101,4 +105,5 @@ if __name__ == '__main__':
         main()
     except KeyboardInterrupt:
         print("\nReceived KeyboardInterrupt. Exiting.")
+        cfg.cleanup_imagefile()
         exit()

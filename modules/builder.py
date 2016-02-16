@@ -71,6 +71,7 @@ def build():
     initialize_libvirt_qemu_session()
     o = cfg.opts
     cmd = [
+        'nice',
         'virt-builder', o.templateName,
         '--output', o.outFile
         ]
