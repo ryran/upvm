@@ -20,7 +20,7 @@ __date__    = '2016/02/16'
 prog = 'upvm'
 
 # Path to helper blockdev script
-blockdevHelper = '/usr/libexec/{}-dd-helper.py'.format(prog)
+blockdevHelper = '/usr/share/{}/dd-helper.py'.format(prog)
 
 # Set config file locations used by configargparse
 cfgfileExample = '/usr/share/{}/example.conf'.format(prog)
