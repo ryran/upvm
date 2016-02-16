@@ -16,18 +16,20 @@
 # limitations under the License.
 #-------------------------------------------------------------------------------
 
-# Modules from standard library
-from subprocess import call
+import subprocess
 from sys import argv, exit
-if len(argv) != 3:
-    print("Improper arguments")
+from os import devnull
+outfile, infile = argv[1], argv[2]
+null = open(devnull, 'w')
+rc = subprocess.call(['findmnt', '-no', 'target', outfile], stdout=null, stderr=null)
+if rc == 0:
+    # If findmnt reports outfile is mounted
     exit(2)
-cmd = [
-    'nice', '-n', '19',
-    'dd',
-    'of={}'.format(argv[1]),
-    'if={}'.format(argv[2]),
-    'bs=1M',
-    ]
-rc = call(cmd)
-exit(rc)
+lsof = subprocess.Popen(['nice', 'lsof', '-tlS', outfile], stdout=subprocess.PIPE, stderr=null)
+output = lsof.communicate()[0]
+if output:
+    # If lsof reports anything using our outfile
+    exit(3)
+null.close()
+dd = ['nice', 'dd', 'of={}'.format(outfile), 'if={}'.format(infile), 'bs=1M']
+exit(subprocess.call(dd))
