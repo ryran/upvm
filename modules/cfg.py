@@ -13,8 +13,8 @@ import json
 from . import string_ops as c
 
 # Version info
-__version__ = '0.10.6'
-__date__    = '2016/02/16'
+__version__ = '0.10.7'
+__date__    = '2016/02/19'
 
 # All references to program name should use this
 prog = 'upvm'

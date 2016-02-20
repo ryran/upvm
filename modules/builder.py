@@ -40,9 +40,9 @@ firstBootScriptEnd = dedent("""\
     echo "Installed authorized SSH pubkey(s) for root user"
     systemctl disable firstboot 2>/dev/null
     rm /etc/rc?.d/S99virt-sysprep-firstboot 2>/dev/null
-    if command -v run-parts >/dev/null && [[ -d /etc/cron.daily ]]; then
-        run-parts /etc/cron.daily 2>/dev/null
-        echo "Finished first-run of /etc/cron.daily scripts (e.g. mandb)"
+    if command -v run-parts >/dev/null && [[ -d /etc/cron.daily ]] && [[ -n $(pidof atd) ]]; then
+        echo 'run-parts /etc/cron.daily
+              wall "Finished first-run of /etc/cron.daily scripts (build locate/man DBs)"' | at now+1min
     fi
     echo "Finished one-time firstboot script."
     """)

@@ -122,7 +122,7 @@ def parse():
         help="Disable all color terminal enhancements")
     grp0.add_argument(
         '--noconsole', dest='autoconsole', action='store_false',
-        help="Disable post-install auto-execution of 'sudo virsh console VMNAME' (automatically disabled when running with no tty)")
+        help="Disable post-install auto-execution of 'virsh console VMNAME' (automatically disabled when running with no tty)")
     grp0.add_argument(
         '--cachedir', default='/var/cache/{}'.format(cfg.prog), dest='vbCachedir', metavar='VBCACHEDIR',
         help="Set the directory for virt-builder cached templates (default: '/var/cache/{}' which is only writable by members of the 'libvirt' group; note that this contrasts with virt-builder's default more secure & more wasteful behavior of saving per-user cache in homedirs)".format(cfg.prog))
