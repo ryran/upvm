@@ -82,9 +82,9 @@ SIMPLE OPTIONS:
                         tidbits of status messages are printing along the way
   --build-image-only    Quit after virt-builder finishes making the image file
   --nocolor             Disable all color terminal enhancements
-  --noconsole           Disable post-install auto-execution of 'sudo virsh
-                        console VMNAME' (automatically disabled when running
-                        with no tty)
+  --noconsole           Disable post-install auto-execution of 'virsh console
+                        VMNAME' (automatically disabled when running with no
+                        tty)
   --cachedir VBCACHEDIR
                         Set the directory for virt-builder cached templates
                         (default: '/var/cache/upvm' which is only writable by
