@@ -13,8 +13,8 @@ import json
 from . import string_ops as c
 
 # Version info
-__version__ = '0.10.7'
-__date__    = '2016/02/19'
+__version__ = '0.10.8'
+__date__    = '2016/03/01'
 
 # All references to program name should use this
 prog = 'upvm'
@@ -31,7 +31,7 @@ cfgfileUser = '~/.config/{}.conf'.format(prog)
 tabCacheDir = "{}/.cache/{}".format(os.environ['HOME'], prog)
 
 # This is the default args to pass to virt-install's --boot=
-virtinstall_default_bootopts = 'cdrom,hd,network,menu=on,useserial=on'
+virtinstall_default_bootopts = 'cdrom,hd,network'
 
 # Hmmmmmm
 defaultRegisterScript = '{}/bin/reg'.format(os.environ['HOME'])
